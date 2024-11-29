@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - CurePath</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden; 
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            background-color: #F8F9FA;
+        }
+
+        .firstportion {
+            background: url('bg.png') no-repeat center center/cover;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .navbar a:hover {
+            color: #14967F;
+            text-decoration: underline;
+        }
+
+        .navbar .logo img {
+            height: 50px;
+        }
+
+        .navbar nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .navbar nav a {
+            text-decoration: none;
+            color: #095d7e;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .navbar .auth-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .navbar .auth-buttons .login, 
+        .navbar .auth-buttons .signup {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .login {
+            color: #095d7e;
+            background-color: transparent;
+        }
+
+        .navbar .auth-buttons .signup {
+            background-color: #095d7e;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .navbar nav {
+                display: none; /* Hide menu items */
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-heading {
+            color: #095d7e; 
+            font-weight: bold;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 35px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: #095d7e;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #555;
+            margin: 15px 0;
+        }
+
+        .features {
+            margin-top: 30px;
+        }
+
+        .features h2 {
+            color: #333;
+        }
+
+        .feature-item {
+            margin: 10px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 5px solid #095d7e;
+            border-radius: 5px;
+        }
+
+        /* Footer Styles */
+        .footer {
+            color: #095d7e;
+            padding: 40px 20px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo-img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: #095d7e;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: #095d7e;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-link:hover {
+            color: #14967F;
+            text-decoration: underline;
+        }
+
+        .footer-social {
+            margin-bottom: 20px;
+        }
+
+        .footer-social-link {
+            margin: 0 10px;
+        }
+
+        .footer-social-icon {
+            height: 30px;
+        }
+
+        .footer-contact {
+            font-size: 0.9rem;
+            color: #095d7e;
+        }
+
+        .footer-contact p {
+            color: #095d7e;
+        }
+
+        .footer-email {
+            color: #095d7e;
+            text-decoration: none;
+        }
+
+        .footer-email:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="firstportion">
+        <!-- Navbar -->
+            <div class="navbar">
+                <div class="logo">
+                    <img src="logo.png" alt="CurePath Logo">
+                </div>
+                <nav class="navclass">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="features.html">Features</a>
+                    <a href="#">Pricing Plans</a>
+                    <a href="#">Contact Us</a>
+                </nav>
+                <div class="auth-buttons">
+                    <a href="#" class="login">Login</a>
+                    <a href="#" class="signup">Sign Up</a>
+                </div>
+            </div>
+
+    <div class="container">
+        <h1 class="hero-heading">About CurePath</h1>
+        <p>
+            Welcome to <strong>CurePath</strong> – your personalized health assistant. 
+            CurePath is a revolutionary platform that connects patients with the right doctors by analyzing their symptoms. 
+            Our goal is to simplify healthcare access and provide users with accurate and reliable recommendations.
+        </p>
+
+        <p>
+            At CurePath, we understand how overwhelming it can be to navigate health concerns. 
+            Our platform aims to bridge the gap between patients and the healthcare they need, quickly and efficiently.
+        </p>
+
+        <div class="features">
+            <h2>Key Features:</h2>
+            <div class="feature-item">
+                <strong>Symptom Checker:</strong> Identify symptoms to receive tailored recommendations for specialists within seconds.
+            </div>
+            <div class="feature-item">
+                <strong>Doctor Recommendations:</strong> Accurate suggestions based on your inputs, ensuring you consult the right expert.
+            </div>
+            <div class="feature-item">
+                <strong>Cost Estimation & Insurance Compatibility:</strong> Get upfront cost estimates and filter doctors based on your insurance coverage for worry-free healthcare.
+            </div>
+            <div class="feature-item">
+                <strong>Doctor Search & Reviews:</strong> Browse verified doctors, read reviews, and choose the right care provider based on experience and availability.
+            </div>
+            <div class="feature-item">
+                <strong>Emergency Services Integration:</strong> Locate the nearest emergency services with real-time geolocation for immediate help.
+            </div>
+            <div class="feature-item">
+                <strong>Patient Education & Resources:</strong> Access expert-reviewed health tips, articles, and videos to stay informed and take charge of your wellness.
+            </div>
+            <div class="feature-item">
+                <strong>Personalized Patient Portal:</strong> Store, access, and share your medical records securely whenever you need them.
+            </div>
+            <div class="feature-item">
+                <strong>Disease Outbreak Monitoring:</strong> Stay updated on real-time alerts and insights about local and global disease outbreaks.
+            </div>
+        </div>        
+
+        <p>
+            CurePath is designed for everyone who values their health and seeks prompt, trusted advice. 
+            We’re here to empower you with the knowledge and connections you need to take control of your wellbeing.
+        </p>
+    
+    </div>
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="footer-container">
+                <!-- Logo and Description -->
+                <div class="footer-logo">
+                    <img src="logo.png" alt="CurePath Logo" class="footer-logo-img">
+                    <p class="footer-description">
+                        Empowering healthcare with smarter solutions. Discover the best doctors, tailored for your health needs.
+                    </p>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="footer-nav">
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="about.html" class="footer-link">About</a>
+                    <a href="features.html" class="footer-link">Features</a>
+                    <a href="#" class="footer-link">Pricing Plans</a>
+                    <a href="#" class="footer-link">Contact Us</a>
+                </nav>
+
+                <!-- Social Media Links -->
+                <div class="footer-social">
+                    <a href="https://facebook.com" target="_blank" class="footer-social-link">
+                        <img src="facebook-icon.png" alt="Facebook" class="footer-social-icon">
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="footer-social-link">
+                        <img src="twitter-icon.png" alt="Twitter" class="footer-social-icon">
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" class="footer-social-link">
+                        <img src="linkedin-icon.png" alt="LinkedIn" class="footer-social-icon">
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="footer-social-link">
+                        <img src="instagram-icon.png" alt="Instagram" class="footer-social-icon">
+                    </a>
+                </div>
+
+                <!-- Contact and Copyright -->
+                <div class="footer-contact">
+                    <p>Contact us: <a href="mailto:support@curepath.com" class="footer-email">support@curepath.com</a></p>
+                    <p>© 2024 CurePath. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+</body>
+</html>

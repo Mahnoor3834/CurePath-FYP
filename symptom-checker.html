@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Checker - CurePath</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden; 
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            background-color: #F8F9FA;
+        }
+
+        .firstportion {
+            background: url('bg.png') no-repeat center center/cover;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .navbar a:hover {
+            color: #14967F;
+            text-decoration: underline;
+        }
+
+        .navbar .logo img {
+            height: 50px;
+        }
+
+        .navbar nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .navbar nav a {
+            text-decoration: none;
+            color: #095d7e;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .navbar .auth-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .navbar .auth-buttons .login, 
+        .navbar .auth-buttons .signup {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .login {
+            color: #095d7e;
+            background-color: transparent;
+        }
+
+        .navbar .auth-buttons .signup {
+            background-color: #095d7e;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .navbar nav {
+                display: none; /* Hide menu items */
+            }
+        }
+
+        .container {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+
+        .symptoms-list {
+            margin: 20px 0;
+        }
+
+        .symptom-item {
+            margin: 10px 0;
+        }
+
+        button {
+
+            display: block;
+            width: 200px;
+            padding: 10px;
+            background-color: #095d7e;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #14967F;
+        }
+
+        .hero-heading {
+            color: #095d7e; 
+            font-weight: bold;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 35px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .disease-info {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #095d7e;
+        }
+
+        /* Footer Styles */
+        .footer {
+            color: #095d7e;
+            padding: 40px 20px;
+            font-weight: bold;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            text-align: center;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo-img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: #095d7e;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: #095d7e;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-link:hover {
+            color: #14967F;
+            text-decoration: underline;
+        }
+
+        .footer-social {
+            margin-bottom: 20px;
+        }
+
+        .footer-social-link {
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .footer-social-icon {
+            height: 30px;
+        }
+
+        .footer-contact {
+            font-size: 0.9rem;
+            color: #095d7e;
+        }
+
+        .footer-contact p {
+            color: #095d7e;
+        }
+
+        .footer-email {
+            color: #095d7e;
+            text-decoration: none;
+        }
+
+        .footer-email:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="firstportion">
+        <!-- Navbar -->
+            <div class="navbar">
+                <div class="logo">
+                    <img src="logo.png" alt="CurePath Logo">
+                </div>
+                <nav class="navclass">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="features.html">Features</a>
+                    <a href="#">Pricing Plans</a>
+                    <a href="#">Contact Us</a>
+                </nav>
+                <div class="auth-buttons">
+                    <a href="#" class="login">Login</a>
+                    <a href="#" class="signup">Sign Up</a>
+                </div>
+            </div>
+
+    <div class="container">
+        <h1 class="hero-heading">Symptom Checker</h1>
+        <p>Select the symptoms you are experiencing:</p>
+        <form id="symptomForm">
+            <div class="symptoms-list">
+                <div class="symptom-item">
+                    <input type="checkbox" id="fever" name="symptoms" value="Fever">
+                    <label for="fever">Fever</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="cough" name="symptoms" value="Cough">
+                    <label for="cough">Cough</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="headache" name="symptoms" value="Headache">
+                    <label for="headache">Headache</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="fatigue" name="symptoms" value="Fatigue">
+                    <label for="fatigue">Fatigue</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="nausea" name="symptoms" value="Nausea">
+                    <label for="nausea">Nausea</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="vomiting" name="symptoms" value="Vomiting">
+                    <label for="vomiting">Vomiting</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="diarrhea" name="symptoms" value="Diarrhea">
+                    <label for="diarrhea">Diarrhea</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="shortness-of-breath" name="symptoms" value="Shortness of Breath">
+                    <label for="shortness-of-breath">Shortness of Breath</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="chest-pain" name="symptoms" value="Chest Pain">
+                    <label for="chest-pain">Chest Pain</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="abdominal-pain" name="symptoms" value="Abdominal Pain">
+                    <label for="abdominal-pain">Abdominal Pain</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="dizziness" name="symptoms" value="Dizziness">
+                    <label for="dizziness">Dizziness</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="asthma" name="symptoms" value="Asthma">
+                    <label for="asthma">Asthma</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="bronchitis" name="symptoms" value="Bronchitis">
+                    <label for="bronchitis">Bronchitis</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="ear-pain" name="symptoms" value="Ear Pain">
+                    <label for="ear-pain">Ear Pain</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="viral-infection" name="symptoms" value="Viral Infection">
+                    <label for="viral-infection">Viral Infection</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="tuberculosis" name="symptoms" value="Tuberculosis">
+                    <label for="tuberculosis">Tuberculosis</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="heart-issues" name="symptoms" value="Heart Issues">
+                    <label for="heart-issues">Heart Issues</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="skin-problems" name="symptoms" value="Skin Problems">
+                    <label for="skin-problems">Skin Problems</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="gynae" name="symptoms" value="Gynae">
+                    <label for="gynae">Gynae</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="gastric-issues" name="symptoms" value="Gastric Issues">
+                    <label for="gastric-issues">Gastric Issues</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="arthritis" name="symptoms" value="Arthritis">
+                    <label for="arthritis">Arthritis</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="hair-problems" name="symptoms" value="Hair Problems">
+                    <label for="hair-problems">Hair Problems</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="diarrhea" name="symptoms" value="Diarrhea">
+                    <label for="diarrhea">Diarrhea</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="shortness-of-breath" name="symptoms" value="Shortness of Breath">
+                    <label for="shortness-of-breath">Shortness of Breath</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="chest-pain" name="symptoms" value="Chest Pain">
+                    <label for="chest-pain">Chest Pain</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="abdominal-pain" name="symptoms" value="Abdominal Pain">
+                    <label for="abdominal-pain">Abdominal Pain</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="dizziness" name="symptoms" value="Dizziness">
+                    <label for="dizziness">Dizziness</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="sore-throat" name="symptoms" value="Sore Throat">
+                    <label for="sore-throat">Sore Throat</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="runny-nose" name="symptoms" value="Runny Nose">
+                    <label for="runny-nose">Runny Nose</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="skin-rash" name="symptoms" value="Skin Rash">
+                    <label for="skin-rash">Skin Rash</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="joint-pain" name="symptoms" value="Joint Pain">
+                    <label for="joint-pain">Joint Pain</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="muscle-pain" name="symptoms" value="Muscle Pain">
+                    <label for="muscle-pain">Muscle Pain</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="blurred-vision" name="symptoms" value="Blurred Vision">
+                    <label for="blurred-vision">Blurred Vision</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="hearing-loss" name="symptoms" value="Hearing Loss">
+                    <label for="hearing-loss">Hearing Loss</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="palpitations" name="symptoms" value="Palpitations">
+                    <label for="palpitations">Palpitations</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="loss-of-appetite" name="symptoms" value="Loss of Appetite">
+                    <label for="loss-of-appetite">Loss of Appetite</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="weight-loss" name="symptoms" value="Weight Loss">
+                    <label for="weight-loss">Weight Loss</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="weight-gain" name="symptoms" value="Weight Gain">
+                    <label for="weight-gain">Weight Gain</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="anxiety" name="symptoms" value="Anxiety">
+                    <label for="anxiety">Anxiety</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="depression" name="symptoms" value="Depression">
+                    <label for="depression">Depression</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="insomnia" name="symptoms" value="Insomnia">
+                    <label for="insomnia">Insomnia</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="itching" name="symptoms" value="Itching">
+                    <label for="itching">Itching</label>
+                </div>
+                <div class="symptom-item">
+                    <input type="checkbox" id="bleeding" name="symptoms" value="Bleeding">
+                    <label for="bleeding">Bleeding</label>
+                </div>
+            </div>
+            <button class="symptom-button" type="button" onclick="getResults()">Submit</button>
+        </form>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        function getResults() {
+            const selectedSymptoms = [];
+            const checkboxes = document.querySelectorAll('input[name="symptoms"]:checked');
+
+            checkboxes.forEach((checkbox) => {
+                selectedSymptoms.push(checkbox.value);
+            });
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (selectedSymptoms.length === 0) {
+                resultsDiv.innerHTML = '<p>Please select at least one symptom.</p>';
+                return;
+            }
+
+            // Example data mapping symptoms to diseases and doctors
+            const symptomToDisease = {
+                "Fever": { disease: "Flu", doctor: "General Physician" },
+                "Cough": { disease: "Bronchitis", doctor: "Pulmonologist" },
+                "Headache": { disease: "Migraine", doctor: "Neurologist" },
+                "Fatigue": { disease: "Anemia", doctor: "Hematologist" },
+                "Nausea": { disease: "Gastroenteritis", doctor: "Gastroenterologist" },
+            };
+
+            resultsDiv.innerHTML += '<h2>Results:</h2>';
+
+            selectedSymptoms.forEach((symptom) => {
+                if (symptomToDisease[symptom]) {
+                    const info = symptomToDisease[symptom];
+                    resultsDiv.innerHTML += `
+                        <div class="disease-info">
+                            <strong>Symptom:</strong> ${symptom}<br>
+                            <strong>Possible Disease:</strong> ${info.disease}<br>
+                            <strong>Recommended Doctor:</strong> ${info.doctor}
+                        </div>
+                    `;
+                }
+            });
+        }
+    </script>
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Logo and Description -->
+            <div class="footer-logo">
+                <img src="logo.png" alt="CurePath Logo" class="footer-logo-img">
+                <p class="footer-description">
+                    Empowering healthcare with smarter solutions. Discover the best doctors, tailored for your health needs.
+                </p>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="footer-nav">
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="about.html" class="footer-link">About</a>
+                <a href="features.html" class="footer-link">Features</a>
+                <a href="#" class="footer-link">Pricing Plans</a>
+                <a href="#" class="footer-link">Contact Us</a>
+            </nav>
+
+            <!-- Social Media Links -->
+            <div class="footer-social">
+                <a href="https://facebook.com" target="_blank" class="footer-social-link">
+                    <img src="facebook-icon.png" alt="Facebook" class="footer-social-icon">
+                </a>
+                <a href="https://twitter.com" target="_blank" class="footer-social-link">
+                    <img src="twitter-icon.png" alt="Twitter" class="footer-social-icon">
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="footer-social-link">
+                    <img src="linkedin-icon.png" alt="LinkedIn" class="footer-social-icon">
+                </a>
+                <a href="https://instagram.com" target="_blank" class="footer-social-link">
+                    <img src="instagram-icon.png" alt="Instagram" class="footer-social-icon">
+                </a>
+            </div>
+
+            <!-- Contact and Copyright -->
+            <div class="footer-contact">
+                <p>Contact us: <a href="mailto:support@curepath.com" class="footer-email">support@curepath.com</a></p>
+                <p>© 2024 CurePath. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
