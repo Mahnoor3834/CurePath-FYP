@@ -24,6 +24,7 @@
         }
 
         .firstportion {
+            margin: 10px;
             background: url('bg.png') no-repeat center center/cover;
             min-height: 100vh;
         }
@@ -97,12 +98,12 @@
 
         .container {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px;
+            background-color: #F5FAFF;
+            border-radius: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            border: 2px solid #cce7f5;
         }
 
         h1 {
@@ -111,15 +112,17 @@
         }
 
         .symptoms-list {
-            margin: 20px 0;
+            margin: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .symptom-item {
-            margin: 10px 0;
+            width: calc(33.33% - 10px); /* Adjust the width to fit 3 items per row */
         }
 
         button {
-
             display: block;
             width: 200px;
             padding: 10px;
@@ -500,25 +503,8 @@
                 <a href="#" class="footer-link">Contact Us</a>
             </nav>
 
-            <!-- Social Media Links -->
-            <div class="footer-social">
-                <a href="https://facebook.com" target="_blank" class="footer-social-link">
-                    <img src="facebook-icon.png" alt="Facebook" class="footer-social-icon">
-                </a>
-                <a href="https://twitter.com" target="_blank" class="footer-social-link">
-                    <img src="twitter-icon.png" alt="Twitter" class="footer-social-icon">
-                </a>
-                <a href="https://linkedin.com" target="_blank" class="footer-social-link">
-                    <img src="linkedin-icon.png" alt="LinkedIn" class="footer-social-icon">
-                </a>
-                <a href="https://instagram.com" target="_blank" class="footer-social-link">
-                    <img src="instagram-icon.png" alt="Instagram" class="footer-social-icon">
-                </a>
-            </div>
-
             <!-- Contact and Copyright -->
             <div class="footer-contact">
-                <p>Contact us: <a href="mailto:support@curepath.com" class="footer-email">support@curepath.com</a></p>
                 <p>© 2024 CurePath. All Rights Reserved.</p>
             </div>
         </div>
