@@ -120,6 +120,10 @@
 
         .symptom-item {
             width: calc(33.33% - 10px); /* Adjust the width to fit 3 items per row */
+            display: flex;
+            align-items: center;
+            gap: 10px; 
+            margin-bottom: 10px;
         }
 
         button {
@@ -257,189 +261,24 @@
                 </div>
             </div>
 
-    <div class="container">
-        <h1 class="hero-heading">Symptom Checker</h1>
-        <p>Select the symptoms you are experiencing:</p>
-        <form id="symptomForm">
-            <div class="symptoms-list">
-                <div class="symptom-item">
-                    <input type="checkbox" id="fever" name="symptoms" value="Fever">
-                    <label for="fever">Fever</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="cough" name="symptoms" value="Cough">
-                    <label for="cough">Cough</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="headache" name="symptoms" value="Headache">
-                    <label for="headache">Headache</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="fatigue" name="symptoms" value="Fatigue">
-                    <label for="fatigue">Fatigue</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="nausea" name="symptoms" value="Nausea">
-                    <label for="nausea">Nausea</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="vomiting" name="symptoms" value="Vomiting">
-                    <label for="vomiting">Vomiting</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="diarrhea" name="symptoms" value="Diarrhea">
-                    <label for="diarrhea">Diarrhea</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="shortness-of-breath" name="symptoms" value="Shortness of Breath">
-                    <label for="shortness-of-breath">Shortness of Breath</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="chest-pain" name="symptoms" value="Chest Pain">
-                    <label for="chest-pain">Chest Pain</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="abdominal-pain" name="symptoms" value="Abdominal Pain">
-                    <label for="abdominal-pain">Abdominal Pain</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="dizziness" name="symptoms" value="Dizziness">
-                    <label for="dizziness">Dizziness</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="asthma" name="symptoms" value="Asthma">
-                    <label for="asthma">Asthma</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="bronchitis" name="symptoms" value="Bronchitis">
-                    <label for="bronchitis">Bronchitis</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="ear-pain" name="symptoms" value="Ear Pain">
-                    <label for="ear-pain">Ear Pain</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="viral-infection" name="symptoms" value="Viral Infection">
-                    <label for="viral-infection">Viral Infection</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="tuberculosis" name="symptoms" value="Tuberculosis">
-                    <label for="tuberculosis">Tuberculosis</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="heart-issues" name="symptoms" value="Heart Issues">
-                    <label for="heart-issues">Heart Issues</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="skin-problems" name="symptoms" value="Skin Problems">
-                    <label for="skin-problems">Skin Problems</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="gynae" name="symptoms" value="Gynae">
-                    <label for="gynae">Gynae</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="gastric-issues" name="symptoms" value="Gastric Issues">
-                    <label for="gastric-issues">Gastric Issues</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="arthritis" name="symptoms" value="Arthritis">
-                    <label for="arthritis">Arthritis</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="hair-problems" name="symptoms" value="Hair Problems">
-                    <label for="hair-problems">Hair Problems</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="diarrhea" name="symptoms" value="Diarrhea">
-                    <label for="diarrhea">Diarrhea</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="shortness-of-breath" name="symptoms" value="Shortness of Breath">
-                    <label for="shortness-of-breath">Shortness of Breath</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="chest-pain" name="symptoms" value="Chest Pain">
-                    <label for="chest-pain">Chest Pain</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="abdominal-pain" name="symptoms" value="Abdominal Pain">
-                    <label for="abdominal-pain">Abdominal Pain</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="dizziness" name="symptoms" value="Dizziness">
-                    <label for="dizziness">Dizziness</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="sore-throat" name="symptoms" value="Sore Throat">
-                    <label for="sore-throat">Sore Throat</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="runny-nose" name="symptoms" value="Runny Nose">
-                    <label for="runny-nose">Runny Nose</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="skin-rash" name="symptoms" value="Skin Rash">
-                    <label for="skin-rash">Skin Rash</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="joint-pain" name="symptoms" value="Joint Pain">
-                    <label for="joint-pain">Joint Pain</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="muscle-pain" name="symptoms" value="Muscle Pain">
-                    <label for="muscle-pain">Muscle Pain</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="blurred-vision" name="symptoms" value="Blurred Vision">
-                    <label for="blurred-vision">Blurred Vision</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="hearing-loss" name="symptoms" value="Hearing Loss">
-                    <label for="hearing-loss">Hearing Loss</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="palpitations" name="symptoms" value="Palpitations">
-                    <label for="palpitations">Palpitations</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="loss-of-appetite" name="symptoms" value="Loss of Appetite">
-                    <label for="loss-of-appetite">Loss of Appetite</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="weight-loss" name="symptoms" value="Weight Loss">
-                    <label for="weight-loss">Weight Loss</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="weight-gain" name="symptoms" value="Weight Gain">
-                    <label for="weight-gain">Weight Gain</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="anxiety" name="symptoms" value="Anxiety">
-                    <label for="anxiety">Anxiety</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="depression" name="symptoms" value="Depression">
-                    <label for="depression">Depression</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="insomnia" name="symptoms" value="Insomnia">
-                    <label for="insomnia">Insomnia</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="itching" name="symptoms" value="Itching">
-                    <label for="itching">Itching</label>
-                </div>
-                <div class="symptom-item">
-                    <input type="checkbox" id="bleeding" name="symptoms" value="Bleeding">
-                    <label for="bleeding">Bleeding</label>
-                </div>
+            <div class="container">
+                <h1 class="hero-heading">Symptom Checker</h1>
+                <p>Select the symptoms you are experiencing:</p>
+                <input 
+                type="text" 
+                id="symptomSearch" 
+                placeholder="Search for symptoms..." 
+                oninput="filterSymptoms()" 
+                style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px;">
+    
+                <form id="symptomForm">
+                    <div class="symptoms-list" id="symptomsContainer">
+                    </div>
+                    <button class="symptom-button" type="button" onclick="getResults()">Submit</button>
+                </form>
+                <div class="results" id="results"></div>
             </div>
-            <button class="symptom-button" type="button" onclick="getResults()">Submit</button>
-        </form>
-
-        <div class="results" id="results"></div>
-    </div>
+            
 
     <script>
         function getResults() {
@@ -482,6 +321,30 @@
                 }
             });
         }
+        document.addEventListener("DOMContentLoaded", function () {
+        fetch("fetch_symptoms.php")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("symptomsContainer").innerHTML = data;
+            })
+            .catch(error => {
+                console.error("Error loading symptoms:", error);
+            });
+        });
+        function filterSymptoms() {
+            const searchValue = document.getElementById('symptomSearch').value.toLowerCase();
+            const symptoms = document.querySelectorAll('.symptom-item');
+
+            symptoms.forEach(item => {
+                const label = item.querySelector('label').innerText.toLowerCase();
+                if (label.includes(searchValue)) {
+                    item.style.display = 'flex'; // Show matching symptoms
+                } else {
+                    item.style.display = 'none'; // Hide non-matching symptoms
+                }
+            });
+        }
+
     </script>
     <!-- Footer Section -->
     <footer class="footer">
