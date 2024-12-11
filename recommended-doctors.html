@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symptom Checker - CurePath</title>
+    <title>Recommended Doctors</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;  
         }
 
         html, body {
@@ -96,59 +100,57 @@
                 display: none; /* Hide menu items */
             }
         }
-
-        .container {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            padding: 40px 20px;
-            background-color: #F5FAFF;
-            border-radius: 20px;
-            max-width: 1200px;
-            margin: 20px auto;
-            border: 2px solid #cce7f5;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333333;
-        }
-
-        .symptoms-list {
-            margin: 10px;
+        .doctor-info {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .symptom-item {
-            width: calc(33.33% - 10px); /* Adjust the width to fit 3 items per row */
-            display: flex;
-            align-items: center;
-            gap: 10px; 
-            margin-bottom: 10px;
-        }
-
-        button {
-            display: block;
-            width: 200px;
+            align-items: center; 
+            justify-content: space-between;
+            gap: 50px; 
+            margin-bottom: 15px; 
             padding: 10px;
+            padding-left: 40px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #095d7e;
+            border-radius: 5px;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%; 
+            object-fit: cover; 
+        }
+
+        .details {
+            flex-grow: 1;
+            font-size: 16px;
+            color: #333;
+        }
+        .insurance-btn {
+            align-self: flex-end;
             background-color: #095d7e;
             color: white;
-            font-size: 16px;
+            font-size: 1rem;
+            padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
-        button:hover {
+        .insurance-btn:hover {
             background-color: #14967F;
         }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-        .hero-heading {
-            color: #095d7e; 
-            font-weight: bold;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 35px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        h1 {
+            text-align: center;
+            color: #095d7e;
         }
 
         .results {
@@ -160,14 +162,30 @@
             padding: 10px;
             background-color: #f9f9f9;
             border-left: 4px solid #095d7e;
+            border-radius: 5px;
         }
 
+        .back-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #095d7e;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            max-width: 200px;
+        }
+
+        .back-button:hover {
+            background-color: #14967F;
+        }
         /* Footer Styles */
         .footer {
             color: #095d7e;
             padding: 40px 20px;
-            font-weight: bold;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: bold;
             text-align: center;
         }
 
@@ -215,7 +233,6 @@
 
         .footer-social-link {
             margin: 0 10px;
-            text-decoration: none;
         }
 
         .footer-social-icon {
@@ -239,7 +256,6 @@
         .footer-email:hover {
             text-decoration: underline;
         }
-
     </style>
 </head>
 <body>
@@ -261,105 +277,88 @@
                     <a href="#" class="signup">Sign Up</a>
                 </div>
             </div>
+    <div class="container">
+        <h1>Recommended Doctors</h1>
+        <div class="results" id="results">
+            <!-- Doctor recommendations will appear here -->     
+        </div>
+        <a href="symptom-checker.html" class="back-button">Back to Symptom Checker</a>
+    </div>
 
-            <div class="container">
-                <h1 class="hero-heading">Symptom Checker</h1>
-                <p>Select the symptoms you are experiencing:</p>
-                <input 
-                type="text" 
-                id="symptomSearch" 
-                placeholder="Search for symptoms..." 
-                oninput="filterSymptoms()" 
-                style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px;">
-    
-                <form id="symptomForm">
-                    <div class="symptoms-list" id="symptomsContainer">
-                    </div>
-                    <button class="symptom-button" type="button" onclick="submitSymptoms()">Submit</button>
-                </form>
-                <div class="results" id="results"></div>
-            </div>
-            
-
-    <script>
-        function submitSymptoms() {
-            const selectedSymptoms = [];
-            const checkboxes = document.querySelectorAll('input[name="symptoms"]:checked');
-
-            checkboxes.forEach((checkbox) => {
-                selectedSymptoms.push(checkbox.value);
-            });
-
-            if (selectedSymptoms.length === 0) {
-                alert("Please select at least one symptom.");
-                return;
-            }
-
-            const queryParams = new URLSearchParams({ symptoms: selectedSymptoms.join(',') });
-            window.location.href = `recommended-doctors.html?${queryParams.toString()}`;
-        }
-
-
-    </script>
-    <!-- Footer Section -->
-    <footer class="footer">
+     <!-- Footer Section -->
+     <footer class="footer">
         <div class="footer-container">
             <!-- Logo and Description -->
             <div class="footer-logo">
                 <img src="logo.png" alt="CurePath Logo" class="footer-logo-img">
                 <p class="footer-description">
-                    Empowering healthcare with smarter solutions. Discover the best doctors, tailored for your health needs.
+                    © 2024 CurePath. All Rights Reserved.
                 </p>
-            </div>
-
-            <!-- Navigation Links -->
-            <nav class="footer-nav">
-                <a href="index.html" class="footer-link">Home</a>
-                <a href="about.html" class="footer-link">About</a>
-                <a href="features.html" class="footer-link">Features</a>
-                <a href="#" class="footer-link">Pricing Plans</a>
-                <a href="#" class="footer-link">Contact Us</a>
-            </nav>
-
-            <!-- Contact and Copyright -->
-            <div class="footer-contact">
-                <p>© 2024 CurePath. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!--Main Page's search box redirection-->
+
     <script>
         // Function to get URL query parameters
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            const symptoms = params.get("symptoms");
-            return symptoms ? symptoms.split(',') : [];
-        }
-
         document.addEventListener("DOMContentLoaded", function () {
-            const preselectedSymptoms = getQueryParams();
+            const getQueryParams = () => {
+                const params = new URLSearchParams(window.location.search);
+                return params.get("symptoms")?.split(",") || [];
+            };
 
-            // Fetch symptoms dynamically and preselect previously selected ones
-            fetch("fetch_symptoms.php")
-                .then(response => response.text())
-                .then(data => {
-                    const container = document.getElementById("symptomsContainer");
-                    container.innerHTML = data;
+            const symptoms = getQueryParams();
+            const resultsDiv = document.getElementById("results");
 
-                    // Preselect previously selected symptoms
-                    preselectedSymptoms.forEach(symptom => {
-                        const checkbox = container.querySelector(`input[value="${symptom}"]`);
-                        if (checkbox) {
-                            checkbox.checked = true;
-                        }
-                    });
-                })
-                .catch(error => {
-                    console.error("Error loading symptoms:", error);
+            if (symptoms.length === 0) {
+                resultsDiv.innerHTML = '<p>No symptoms provided.</p>';
+                return;
+            }
+
+            // Send symptoms to the back end
+            fetch("fetch_doctors.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ symptoms: symptoms }),
+            })
+            .then(response => response.json())
+            .then((data) => {
+                if (data.status === "error") {
+                    resultsDiv.innerHTML = `<p>${data.message}</p>`;
+                    return;
+                }
+
+                if (data.doctors.length === 0) {
+                    resultsDiv.innerHTML = '<p>No doctors found for the selected symptoms.</p>';
+                    return;
+                }
+
+                data.doctors.forEach((doctor) => {
+                    resultsDiv.innerHTML += `
+                        <div class="doctor-info">
+                            <img src="${doctor.profile_img}" alt="${doctor.doctor_name}" class = "profile-pic">
+                            <div class = "details">
+                                <strong>Doctor:</strong> ${doctor.doctor_name}<br>
+                                <strong>Specialization:</strong> ${doctor.speciality_name}<br>
+                                <strong>Hospital:</strong> ${doctor.hospital_name}<br>
+                                <strong>Availability:</strong> ${doctor.availability.day_of_week} at ${doctor.availability.time}<br>
+                            </div>
+                            <button onclick="redirectToInsurance('${doctor.doctor_id}','${doctor.hospital_id}')" class = "insurance-btn">Check Insurance</button>
+                        </div>    
+                    `;
                 });
+            })
+            .catch((error) => {
+                resultsDiv.innerHTML = '<p>There was an error fetching results. Please try again later.</p>';
+                console.error("Error:", error);
+            });
         });
-
+        // Redirect to Insurance Page
+        function redirectToInsurance(doctorId, hospitalId) {
+            window.location.href = `insurance.html?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
+        }    
     </script>
 </body>
 </html>

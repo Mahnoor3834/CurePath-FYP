@@ -50,7 +50,8 @@
         }
 
         .navbar .logo img {
-            height: 50px;
+            height: 70px;
+            margin-left: 30px;
         }
 
         .navbar nav {
@@ -64,7 +65,7 @@
             text-decoration: none;
             color: #095d7e;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
         .navbar .auth-buttons {
@@ -162,7 +163,7 @@
             border: none;
             border-radius: 50px;
             background-color: #EDF9F3;
-            color: #E2FCD6;
+            color: #095d7e;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
 
@@ -239,7 +240,7 @@
         .about-content {
             display: grid;
             grid-template-columns: 1fr 1fr 1.5fr; /* Three equal columns */
-            align-items: start; /* Align content to the top */
+            align-items: center; /* Align content to the center */
             gap: 15px; 
             max-width: 1200px;
             margin: auto; /* Center the grid */
@@ -654,27 +655,32 @@
             </h1>
             <p>Experience a seamless journey from symptom check <br> to doctor booking, all in one app.</p>
             <div class="search-box">
-                <input type="text" placeholder="Type your symptoms to find a doctor">
+                <input 
+                    type="text" 
+                    id="symptomSearch" 
+                    placeholder="Type your symptoms to find a doctor"
+                    oninput="filterSuggestions()"
+                >
                 <button>Search</button>
                 <!-- Hover Suggestions -->
                 <div class="hover-suggestions-container">
                     <div class="hover-suggestions">
-                        <span>Headache</span>
-                        <span>Fever</span>
-                        <span>Chest Pain</span>
-                        <span>Fatigue</span>
-                        <span>Nausea</span>
-                        <span>Asthma</span>
-                        <span>Bronchitis</span>
-                        <span>Ear Pain</span>
-                        <span>Viral Infection</span>
-                        <span>Tuberculosis</span>
-                        <span>Heart Issues</span>
-                        <span>Skin Problems</span>
-                        <span>Gynae</span>
-                        <span>Gastric Issues</span>
-                        <span>Arthritis</span>
-                        <span>Hair Problems</span>
+                        <span onclick="addSymptom('Headache')">Headache</span>
+                        <span onclick="addSymptom('Fever')">Fever</span>
+                        <span onclick="addSymptom('Chest Pain')">Chest Pain</span>
+                        <span onclick="addSymptom('Fatigue')">Fatigue</span>
+                        <span onclick="addSymptom('Nausea')">Nausea</span>
+                        <span onclick="addSymptom('Sneezing')">Sneezing</span>
+                        <span onclick="addSymptom('Diarrhea')">Diarrhea</span>
+                        <span onclick="addSymptom('Cough')">Cough</span>
+                        <span onclick="addSymptom('Vomitting')">Vomitting</span>
+                        <span onclick="addSymptom('Dehydration')">Dehydration</span>
+                        <span onclick="addSymptom('Shivering')">Shivering</span>
+                        <span onclick="addSymptom('Muscle Pain')">Muscle Pain</span>
+                        <span onclick="addSymptom('Constipation')">Constipation</span>
+                        <span onclick="addSymptom('Liver swelling')">Liver swelling</span>
+                        <span onclick="addSymptom('Acidity')">Acidity</span>
+                        <span onclick="addSymptom('Thinning hair')">Thinning hair</span>
                     </div>
                 </div>
             </div>
@@ -699,7 +705,7 @@
                 <h2 class="aboutheading2">
                     to Healthcare Hassles.
                 </h2>
-                <button class="explore-button">Explore Features</button>
+                <button class="explore-button" onclick="location.href='about.html'">Explore More</button>
             </div>
 
             <!-- Column 3: Paragraph -->
@@ -710,7 +716,6 @@
                     and manage your medical records all in one intuitive platform. Your health deserves the best, and CurePath is here to make it
                     easier, faster, and smarter.
                 </p>
-                <button class="explore-button">Explore Features</button>
             </div>
         </div>
     </div>
@@ -736,7 +741,7 @@
             
             <!-- Column 3: Button -->
             <div class="features-column">
-                <button class="features-button">Explore Features</button>
+                <button class="features-button" onclick="location.href='features.html'">Explore Features</button>
             </div>
         </div>
     
@@ -747,7 +752,7 @@
                 <p style="padding-right: 60%;">Identify symptoms to receive tailored recommendations for specialists within seconds.</p>
             </a>
         
-            <a href="cost-estimation.html" class="feature-card green-card" style="width: 490px;">
+            <a href="insurance.html" class="feature-card green-card" style="width: 490px;">
                 <img src="cost.png" alt="Feature Icon">
                 <h3>Cost Estimation & Insurance Compatibility</h3>
                 <p>Get upfront cost estimates and filter doctors based on your insurance coverage for worry-free healthcare.</p>
@@ -811,5 +816,47 @@
         </div>
     </footer>
 
+    <!--Hero section javascript-->
+    <script>
+        // Add a symptom to the search box
+        function addSymptom(symptom) {
+            const searchBox = document.getElementById("symptomSearch");
+            const currentSymptoms = searchBox.value.split(',').map(s => s.trim());
+            
+            if (!currentSymptoms.includes(symptom)) {
+                currentSymptoms.push(symptom);
+            }
+            
+            searchBox.value = currentSymptoms.filter(Boolean).join(', ');
+        }
+
+        // Filter suggestions based on user input
+        function filterSuggestions() {
+            const searchValue = document.getElementById("symptomSearch").value.toLowerCase();
+            const suggestions = document.querySelectorAll(".hover-suggestions span");
+
+            suggestions.forEach(suggestion => {
+                if (suggestion.innerText.toLowerCase().includes(searchValue)) {
+                    suggestion.style.display = "inline-block";
+                } else {
+                    suggestion.style.display = "none";
+                }
+            });
+        }
+
+        // Redirect to the Symptom Checker page on button click
+        document.querySelector(".search-box button").addEventListener("click", () => {
+            const searchBox = document.getElementById("symptomSearch");
+            const symptoms = searchBox.value.split(',').map(s => s.trim()).filter(Boolean);
+
+            if (symptoms.length === 0) {
+                alert("Please select at least one symptom.");
+                return;
+            }
+
+            const queryParams = new URLSearchParams({ symptoms: symptoms.join(',') });
+            window.location.href = `symptom-checker.html?${queryParams.toString()}`;
+        });
+    </script>
 </body>
 </html>
