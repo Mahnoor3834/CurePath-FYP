@@ -154,6 +154,7 @@
         }
 
         .filter-form button {
+            margin-top: 25px;
             padding: 10px 20px;
             font-size: 1rem;
             background-color: #095d7e;
@@ -210,9 +211,9 @@
 
         .estimation-form button:hover {
             background-color: #14967F;
-        }
+        }*/
 
-        /* Results Section 
+        /*Results Section*/
         .results-section {
             margin-top: 20px;
         }
@@ -223,23 +224,17 @@
             color: #095d7e;
         }
 
-        .results-list {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .results-list li {
-            background-color: #E0F6FF;
-            padding: 10px;
-            margin-bottom: 10px;
+        .results-section .doctor-card {
+            background-color: #F9F9F9;
+            padding: 15px;
+            border-left: 4px solid #14967F;
+            margin-bottom: 15px;
             border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .results-list li strong {
-            color: #14967F;
+        .doctor-card strong {
+            color: #095d7e;
         }
-        */
         /* Footer Styles */
         .footer {
             color: #095d7e;
@@ -343,49 +338,20 @@
 
         <!-- Filter Section -->
         <div class="filter-section">
-            <h3>Search for Doctors</h3>
-            <form class="filter-form">
-                <div>
-                    <label for="fee-range">Fee Range:</label>
-                    <input type="text" id="fee-range" placeholder="e.g., 1000-5000 PKR">
-                </div>
+            <h3>Hospital For Insurance</h3>
+            <form class="filter-form" id="insuranceForm">
                 <div>
                     <label for="insurance">Insurance Compatibility:</label>
                     <select id="insurance">
-                        <option value="">Select Insurance Provider</option>
-                        <option value="hospitalA">Hospital A</option>
-                        <option value="hospitalB">Hospital B</option>
-                        <option value="hospitalC">Hospital C</option>
+                        <option value="">Loading...</option>
                     </select>
-                </div>
-                <div>
-                    <label for="timing">Doctor Timing:</label>
-                    <input type="time" id="timing">
-                </div>
-                <div>
-                    <label for="location">Location:</label>
-                    <input type="text" id="location" placeholder="e.g., DHA, Karachi">
                 </div>
                 <div>
                     <label for="specialization">Specialization:</label>
-                    <select id="specialization">
-                        <option value="">Select Specialization</option>
-                        <option value="neurology">Neurology</option>
-                        <option value="dermatology">Dermatology</option>
-                        <option value="cardiology">Cardiology</option>
-                    </select>
+                    <input type="text" id="specialization" readonly />
                 </div>
                 <div>
-                    <label for="field">Field:</label>
-                    <select id="field">
-                        <option value="">Select Field</option>
-                        <option value="general">General</option>
-                        <option value="pediatrics">Pediatrics</option>
-                        <option value="orthopedics">Orthopedics</option>
-                    </select>
-                </div>
-                <div>
-                    <button type="button">Search</button>
+                    <button type="button" onclick="searchDoctors()">Search</button>
                 </div>
             </form>
         </div>
@@ -397,18 +363,14 @@
                 <textarea placeholder="Describe your symptoms or disease"></textarea>
                 <button type="button">Get Estimate</button>
             </form>
-        </div>
-
-            Results Section 
-        <div class="results-section">
-            <h3>Results</h3>
-            <ul class="results-list">
-                <li><strong>Doctor:</strong> Dr. Ayesha Khan | <strong>Fee:</strong> 3000 PKR | <strong>Location:</strong> Clifton, Karachi</li>
-                <li><strong>Doctor:</strong> Dr. Ali Ahmed | <strong>Fee:</strong> 2000 PKR | <strong>Location:</strong> DHA, Karachi</li>
-                <li><strong>Treatment Estimate:</strong> 25,000 PKR</li>
-            </ul>
         </div>-->
-    </div>  
+
+        <!--Results Section-->
+        <div class="results-section" id="resultsSection">
+            <div id="doctorResults">
+                <!-- Filtered doctors will appear here -->
+            </div>
+        </div> 
     </div>
     <!-- Footer Section -->
     <footer class="footer">
@@ -424,5 +386,75 @@
             <!-- Contact and Copyright -->
         </div>
     </footer>
+
+    <script>
+        // Fetch Insurance Dropdown Options and Pre-fill Specialization Field
+        document.addEventListener("DOMContentLoaded", function () {
+            const params = new URLSearchParams(window.location.search);
+            const selectedSpecialization = params.get("specialization"); // Get specialization from URL
+            
+            // Pre-fill specialization field if specialization is passed in the URL
+            if (selectedSpecialization) {
+                document.getElementById("specialization").value = selectedSpecialization;
+            }
+
+            // Fetch insurance providers (hospitals offering insurance)
+            fetch("fetch_insurance.php")
+                .then(response => response.json())
+                .then(data => {
+                    const insuranceDropdown = document.getElementById("insurance");
+                    insuranceDropdown.innerHTML = '<option value="">Select Hospital</option>';
+                    data.forEach(hospital => {
+                        insuranceDropdown.innerHTML += `<option value="${hospital.hospital_id}">${hospital.name}</option>`;
+                    });
+                })
+                .catch(error => console.error("Error fetching insurance providers:", error));
+        });
+
+        // Search Doctors Based on Selected Hospital
+        function searchDoctors() {
+            const insuranceId = document.getElementById("insurance").value;
+            const specialization = document.getElementById("specialization").value;
+
+            if (!insuranceId) {
+                alert("Please select a hospital.");
+                return;
+            }
+
+            // Send the selected hospital ID to fetch doctors
+            fetch("fetch_ins_doctors.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ hospital_id: insuranceId, specialization: specialization }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById("doctorResults");
+                    resultsDiv.innerHTML = ""; // Clear previous results
+
+                    if (data.length === 0) {
+                        resultsDiv.innerHTML = "<p>No doctors found for the selected hospital.</p>";
+                        return;
+                    }
+
+                    data.forEach(doctor => {
+                        resultsDiv.innerHTML += `
+                            <div class="doctor-card">
+                                <h3>Filtered Doctors</h3>
+                                <strong>Doctor:</strong> ${doctor.name}<br>
+                                <strong>Specialization:</strong> ${doctor.specialization}<br>
+                                <strong>Hospital:</strong> ${doctor.hospital}<br>
+                                <strong>Availability:</strong> ${doctor.availability}
+                            </div>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching doctors:", error);
+                });
+        }
+    </script>
 </body>
 </html>

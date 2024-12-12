@@ -126,7 +126,8 @@
             color: #333;
         }
         .insurance-btn {
-            align-self: flex-end;
+            align-self: flex-start;
+            margin-right: 20px;
             background-color: #095d7e;
             color: white;
             font-size: 1rem;
@@ -279,6 +280,8 @@
             </div>
     <div class="container">
         <h1>Recommended Doctors</h1>
+        <button onclick="redirectToInsurance('${doctor.doctor_id}','${doctor.hospital_id}')" class = "insurance-btn">Check Insurance</button>
+
         <div class="results" id="results">
             <!-- Doctor recommendations will appear here -->     
         </div>
@@ -345,9 +348,7 @@
                                 <strong>Hospital:</strong> ${doctor.hospital_name}<br>
                                 <strong>Availability:</strong> ${doctor.availability.day_of_week} at ${doctor.availability.time}<br>
                             </div>
-                            <button onclick="redirectToInsurance('${doctor.doctor_id}','${doctor.hospital_id}')" class = "insurance-btn">Check Insurance</button>
-                        </div>    
-                    `;
+                        </div>`;
                 });
             })
             .catch((error) => {
@@ -356,8 +357,8 @@
             });
         });
         // Redirect to Insurance Page
-        function redirectToInsurance(doctorId, hospitalId) {
-            window.location.href = `insurance.html?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
+        function redirectToInsurance(doctorId, hospitalId, specialization) {
+            window.location.href = `insurance.html?doctor_id=${doctorId}&hospital_id=${hospitalId}&specialization=${specialization}`;
         }    
     </script>
 </body>

@@ -11,8 +11,8 @@ if ($conn->connect_error) {
     die(json_encode(['status' => 'error', 'message' => 'Database connection failed: ' . $conn->connect_error]));
 }
 
-// Query to fetch hospitals that offer insurance (those with affiliated_hospital_id)
-$query = "SELECT hospital_id, name FROM Hospitals WHERE affiliated_hospital_id IS NOT NULL";
+// Query to fetch all hospitals
+$query = "SELECT hospital_id, name FROM Hospitals";
 $result = $conn->query($query);
 
 $hospitals = [];
