@@ -347,10 +347,6 @@
                     </select>
                 </div>
                 <div>
-                    <label for="specialization">Specialization:</label>
-                    <input type="text" id="specialization" readonly />
-                </div>
-                <div>
                     <button type="button" onclick="searchDoctors()">Search</button>
                 </div>
             </form>
@@ -387,74 +383,68 @@
         </div>
     </footer>
 
-    <script>
-        // Fetch Insurance Dropdown Options and Pre-fill Specialization Field
-        document.addEventListener("DOMContentLoaded", function () {
-            const params = new URLSearchParams(window.location.search);
-            const selectedSpecialization = params.get("specialization"); // Get specialization from URL
-            
-            // Pre-fill specialization field if specialization is passed in the URL
-            if (selectedSpecialization) {
-                document.getElementById("specialization").value = selectedSpecialization;
-            }
+     <script>
+            // Fetch Insurance Dropdown Options
+            document.addEventListener("DOMContentLoaded", function () {
+                const params = new URLSearchParams(window.location.search);
+                const doctorId = params.get("doctor_id");
+                const hospitalId = params.get("hospital_id");
+                const selectedSpecialization = params.get("specialization"); // specialization will not be used anymore
 
-            // Fetch insurance providers (hospitals offering insurance)
-            fetch("fetch_insurance.php")
-                .then(response => response.json())
-                .then(data => {
-                    const insuranceDropdown = document.getElementById("insurance");
-                    insuranceDropdown.innerHTML = '<option value="">Select Hospital</option>';
-                    data.forEach(hospital => {
-                        insuranceDropdown.innerHTML += `<option value="${hospital.hospital_id}">${hospital.name}</option>`;
-                    });
+                // Fetch insurance providers (hospitals offering insurance)
+                fetch("fetch_insurance.php")
+                    .then(response => response.json())
+                    .then(data => {
+                        const insuranceDropdown = document.getElementById("insurance");
+                        insuranceDropdown.innerHTML = '<option value="">Select Hospital</option>';
+                        data.forEach(hospital => {
+                            insuranceDropdown.innerHTML += `<option value="${hospital.hospital_id}">${hospital.name}</option>`;
+                        });
+                    })
+                    .catch(error => console.error("Error fetching insurance providers:", error));
+            });
+
+            // Search Doctors Based on Selected Hospital
+            function searchDoctors() {
+                const insuranceId = document.getElementById("insurance").value;
+
+                if (!insuranceId) {
+                    alert("Please select a hospital.");
+                    return;
+                }
+
+                // Send the selected hospital ID to fetch doctors
+                fetch("fetch_ins_doctors.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ hospital_id: insuranceId }),
                 })
-                .catch(error => console.error("Error fetching insurance providers:", error));
-        });
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsDiv = document.getElementById("doctorResults");
+                        resultsDiv.innerHTML = ""; // Clear previous results
 
-        // Search Doctors Based on Selected Hospital
-        function searchDoctors() {
-            const insuranceId = document.getElementById("insurance").value;
-            const specialization = document.getElementById("specialization").value;
+                        if (data.length === 0) {
+                            resultsDiv.innerHTML = "<p>No doctors found for the selected hospital.</p>";
+                            return;
+                        }
 
-            if (!insuranceId) {
-                alert("Please select a hospital.");
-                return;
-            }
-
-            // Send the selected hospital ID to fetch doctors
-            fetch("fetch_ins_doctors.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ hospital_id: insuranceId, specialization: specialization }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    const resultsDiv = document.getElementById("doctorResults");
-                    resultsDiv.innerHTML = ""; // Clear previous results
-
-                    if (data.length === 0) {
-                        resultsDiv.innerHTML = "<p>No doctors found for the selected hospital.</p>";
-                        return;
-                    }
-
-                    data.forEach(doctor => {
-                        resultsDiv.innerHTML += `
-                            <div class="doctor-card">
-                                <h3>Filtered Doctors</h3>
-                                <strong>Doctor:</strong> ${doctor.name}<br>
-                                <strong>Specialization:</strong> ${doctor.specialization}<br>
-                                <strong>Hospital:</strong> ${doctor.hospital}<br>
-                                <strong>Availability:</strong> ${doctor.availability}
-                            </div>
-                        `;
+                        data.forEach(doctor => {
+                            resultsDiv.innerHTML += `
+                                <div class="doctor-card">
+                                    <strong>Doctor:</strong> ${doctor.name}<br>
+                                    <strong>Hospital:</strong> ${doctor.hospital}<br>
+                                    <strong>Availability:</strong> ${doctor.availability}
+                                </div>
+                            `;
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Error fetching doctors:", error);
                     });
-                })
-                .catch(error => {
-                    console.error("Error fetching doctors:", error);
-                });
-        }
-    </script>
+            }
+        </script>
 </body>
 </html>

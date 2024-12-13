@@ -280,8 +280,11 @@
             </div>
     <div class="container">
         <h1>Recommended Doctors</h1>
-        <button onclick="redirectToInsurance('${doctor.doctor_id}','${doctor.hospital_id}')" class = "insurance-btn">Check Insurance</button>
-
+        <button onclick="redirectToInsurance('${doctor.doctor_id}', '${doctor.hospital_id}')"class = "insurance-btn">
+            Check Insurance
+        </button>
+        
+        
         <div class="results" id="results">
             <!-- Doctor recommendations will appear here -->     
         </div>
@@ -356,10 +359,10 @@
                 console.error("Error:", error);
             });
         });
-        // Redirect to Insurance Page
-        function redirectToInsurance(doctorId, hospitalId, specialization) {
-            window.location.href = `insurance.html?doctor_id=${doctorId}&hospital_id=${hospitalId}&specialization=${specialization}`;
-        }    
+        function redirectToInsurance(doctorId, hospitalId) {
+            window.location.href = `insurance.html?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
+}
+
     </script>
 </body>
 </html>
