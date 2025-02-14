@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symptom Checker - CurePath</title>
+    <title>Patient Portal - CurePath</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -99,6 +99,7 @@
 
         .container {
             font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
             padding: 40px 80px;
             background-color: #F5FAFF;
             border-radius: 20px;
@@ -112,37 +113,59 @@
             color: #333333;
         }
 
-        .symptoms-list {
-            margin: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        .form-group {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin-bottom: 15px;  
+            font-weight: 450;
         }
 
-        .symptom-item {
-            width: calc(33.33% - 10px); /* Adjust the width to fit 3 items per row */
-            display: flex;
-            align-items: center;
-            gap: 10px; 
-            margin-bottom: 10px;
+        label {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 450;
+            display: block;
+            color: #333;
         }
 
-        button {
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .signup-btn {
+            justify-content: center;
             display: block;
             width: 200px;
-            padding: 10px;
             background-color: #095d7e;
             color: white;
-            font-size: 16px;
+            padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-weight: bold;
         }
 
-        button:hover {
+        .signup-btn:hover {
             background-color: #14967F;
         }
 
+        .features-subheading {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center; 
+        }
+
+        .highlight1 {
+            color: #14967F;
+        }
+
+        .highlight2 {
+            color: #095d7e;
+        }
+                
         .hero-heading {
             color: #095d7e; 
             font-weight: bold;
@@ -151,15 +174,94 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
         }
 
-        .results {
+        .sign-button {
+            justify-content: center;
+        }
+
+        .forgot-password {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #095d7e;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .signup-link {
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .signup-link a {
+            color: #095d7e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .file-upload {
             margin-top: 20px;
         }
 
-        .disease-info {
-            margin: 10px 0;
+        .uploaded-files {
+            margin-top: 20px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 500;
+        }
+
+        h2 {
+            color: #095d7e;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+        }
+
+        .file-item {
+            background: #e3f2fd;
             padding: 10px;
-            background-color: #f9f9f9;
-            border-left: 4px solid #095d7e;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-btn {
+            background: #095d7e;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .view-btn:hover {
+            background-color: #14967F;
         }
 
         /* Footer Styles */
@@ -239,7 +341,6 @@
         .footer-email:hover {
             text-decoration: underline;
         }
-
     </style>
 </head>
 <body>
@@ -257,51 +358,47 @@
                     <a href="#">Contact Us</a>
                 </nav>
                 <div class="auth-buttons">
-                    <a href="#" class="login">Login</a>
-                    <a href="sign_up.html" class="signup">Sign Up</a>
+                    <a href="login.html" class="signup">Login</a>
+                    <a href="sign_up.html" class="signup">Sign up</a>
                 </div>
             </div>
 
             <div class="container">
-                <h1 class="hero-heading">Symptom Checker</h1>
-                <p>Select the symptoms you are experiencing:</p>
-                <input 
-                type="text" 
-                id="symptomSearch" 
-                placeholder="Search for symptoms..." 
-                oninput="filterSymptoms()" 
-                style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px;">
-    
-                <form id="symptomForm">
-                    <div class="symptoms-list" id="symptomsContainer">
+                <p class="features-subheading">
+                    <span class="hero-heading">Personalised Patient Portal</span>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" value="Mahnoor">
                     </div>
-                    <button class="symptom-button" type="button" onclick="submitSymptoms()">Submit</button>
-                </form>
-                <div class="results" id="results"></div>
-            </div>
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" value="12">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <input type="text" id="gender" value="Female">
+                    </div>
             
+                    <div class="file-upload">
+                        <label for="file">Upload File:</label>
+                        <input type="file" id="file">
+                    </div>
+            
+                    <div class="uploaded-files">
+                        <h2>Uploaded Files</h2>
+                        <div class="file-item">
+                            <span>Medical_Report.pdf</span>
+                            <button class="view-btn">View</button>
+                        </div>
+                        <div class="file-item">
+                            <span>Blood_Test_Results.jpg</span>
+                            <button class="view-btn">View</button>
+                        </div>
+                    </div>
+                </p><br>
+                </div>
 
-    <script>
-        function submitSymptoms() {
-            const selectedSymptoms = [];
-            const checkboxes = document.querySelectorAll('input[name="symptoms"]:checked');
-
-            checkboxes.forEach((checkbox) => {
-                selectedSymptoms.push(checkbox.value);
-            });
-
-            if (selectedSymptoms.length === 0) {
-                alert("Please select at least one symptom.");
-                return;
-            }
-
-            const queryParams = new URLSearchParams({ symptoms: selectedSymptoms.join(',') });
-            window.location.href = `recommended-doctors.html?${queryParams.toString()}`;
-        }
-
-
-    </script>
-    <!-- Footer Section -->
+        <!-- Footer Section -->
     <footer class="footer">
         <div class="footer-container">
             <!-- Logo and Description -->
@@ -327,39 +424,6 @@
             </div>
         </div>
     </footer>
-
-    <!--Main Page's search box redirection-->
-    <script>
-        // Function to get URL query parameters
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            const symptoms = params.get("symptoms");
-            return symptoms ? symptoms.split(',') : [];
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const preselectedSymptoms = getQueryParams();
-
-            // Fetch symptoms dynamically and preselect previously selected ones
-            fetch("fetch_symptoms.php")
-                .then(response => response.text())
-                .then(data => {
-                    const container = document.getElementById("symptomsContainer");
-                    container.innerHTML = data;
-
-                    // Preselect previously selected symptoms
-                    preselectedSymptoms.forEach(symptom => {
-                        const checkbox = container.querySelector(`input[value="${symptom}"]`);
-                        if (checkbox) {
-                            checkbox.checked = true;
-                        }
-                    });
-                })
-                .catch(error => {
-                    console.error("Error loading symptoms:", error);
-                });
-        });
-
-    </script>
+</div>
 </body>
 </html>

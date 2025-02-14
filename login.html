@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recommended Doctors</title>
+    <title>Login - CurePath</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;  
         }
 
         html, body {
@@ -100,93 +96,124 @@
                 display: none; /* Hide menu items */
             }
         }
-        .doctor-info {
-            display: flex;
-            align-items: center; 
-            justify-content: space-between;
-            gap: 50px; 
-            margin-bottom: 15px; 
-            padding: 10px;
-            padding-left: 40px;
-            background-color: #f9f9f9;
-            border-left: 4px solid #095d7e;
-            border-radius: 5px;
-        }
 
-        .profile-pic {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%; 
-            object-fit: cover; 
-        }
-
-        .details {
-            flex-grow: 1;
-            font-size: 16px;
-            color: #333;
-        }
-        .insurance-btn {
-            align-self: flex-start;
-            margin-right: 20px;
-            background-color: #095d7e;
-            color: white;
-            font-size: 1rem;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .insurance-btn:hover {
-            background-color: #14967F;
-        }
         .container {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            padding: 40px 80px;
+            background-color: #F5FAFF;
+            border-radius: 20px;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 2px solid #cce7f5;
         }
 
         h1 {
             text-align: center;
-            color: #095d7e;
+            color: #333333;
         }
 
-        .results {
-            margin-top: 20px;
+        .form-group {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin-bottom: 15px;  
+            font-weight: 450;
         }
 
-        .disease-info {
-            margin: 10px 0;
+        label {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 450;
+            display: block;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
             padding: 10px;
-            background-color: #f9f9f9;
-            border-left: 4px solid #095d7e;
+            margin-top: 5px;
+            border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        .back-button {
+        .signup-btn {
+            justify-content: center;
             display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
+            width: 200px;
             background-color: #095d7e;
             color: white;
-            text-align: center;
+            padding: 10px;
+            border: none;
             border-radius: 5px;
-            text-decoration: none;
-            max-width: 200px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        .back-button:hover {
+        .signup-btn:hover {
             background-color: #14967F;
         }
+
+        .features-subheading {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 30px;
+            font-weight: 600;
+            text-align: center; 
+        }
+
+        .highlight1 {
+            color: #14967F;
+        }
+
+        .highlight2 {
+            color: #095d7e;
+        }
+                
+        .hero-heading {
+            color: #095d7e; 
+            font-weight: bold;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 35px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .sign-button {
+            justify-content: center;
+        }
+
+        .forgot-password {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #095d7e;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .signup-link {
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .signup-link a {
+            color: #095d7e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
         /* Footer Styles */
         .footer {
             color: #095d7e;
             padding: 40px 20px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: bold;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             text-align: center;
         }
 
@@ -234,6 +261,7 @@
 
         .footer-social-link {
             margin: 0 10px;
+            text-decoration: none;
         }
 
         .footer-social-icon {
@@ -274,95 +302,57 @@
                     <a href="#">Contact Us</a>
                 </nav>
                 <div class="auth-buttons">
-                    <a href="#" class="login">Login</a>
-                    <a href="sign_up.html" class="signup">Sign Up</a>
+                    <a href="sign_up.html" class="signup">Sign up</a>
                 </div>
             </div>
-    <div class="container">
-        <h1>Recommended Doctors</h1>
-        <button onclick="redirectToInsurance('${doctor.doctor_id}', '${doctor.hospital_id}')"class = "insurance-btn">
-            Check Insurance
-        </button>
-        
-        
-        <div class="results" id="results">
-            <!-- Doctor recommendations will appear here -->     
-        </div>
-        <a href="symptom-checker.html" class="back-button">Back to Symptom Checker</a>
-    </div>
 
-     <!-- Footer Section -->
-     <footer class="footer">
+            <div class="container">
+                <p class="features-subheading">
+                    <span class="hero-heading">Login To Your Account</span>
+                </p><br>
+                <form action="login.php" method="POST">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="signup-btn">Login</button>
+            </form>
+            <p class="forgot-password"><a href="#">Forgot Password?</a></p>
+            <p class="signup-link">Don't have an account? <a href="sign_up.html">Sign up here</a></p>
+        </div>
+
+        <!-- Footer Section -->
+    <footer class="footer">
         <div class="footer-container">
             <!-- Logo and Description -->
             <div class="footer-logo">
                 <img src="logo.png" alt="CurePath Logo" class="footer-logo-img">
                 <p class="footer-description">
-                    © 2024 CurePath. All Rights Reserved.
+                    Empowering healthcare with smarter solutions. Discover the best doctors, tailored for your health needs.
                 </p>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="footer-nav">
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="about.html" class="footer-link">About</a>
+                <a href="features.html" class="footer-link">Features</a>
+                <a href="#" class="footer-link">Pricing Plans</a>
+                <a href="#" class="footer-link">Contact Us</a>
+            </nav>
+
+            <!-- Contact and Copyright -->
+            <div class="footer-contact">
+                <p>© 2024 CurePath. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
-
-
-    <script>
-        // Function to get URL query parameters
-        document.addEventListener("DOMContentLoaded", function () {
-            const getQueryParams = () => {
-                const params = new URLSearchParams(window.location.search);
-                return params.get("symptoms")?.split(",") || [];
-            };
-
-            const symptoms = getQueryParams();
-            const resultsDiv = document.getElementById("results");
-
-            if (symptoms.length === 0) {
-                resultsDiv.innerHTML = '<p>No symptoms provided.</p>';
-                return;
-            }
-
-            // Send symptoms to the back end
-            fetch("fetch_doctors.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ symptoms: symptoms }),
-            })
-            .then(response => response.json())
-            .then((data) => {
-                if (data.status === "error") {
-                    resultsDiv.innerHTML = `<p>${data.message}</p>`;
-                    return;
-                }
-
-                if (data.doctors.length === 0) {
-                    resultsDiv.innerHTML = '<p>No doctors found for the selected symptoms.</p>';
-                    return;
-                }
-
-                data.doctors.forEach((doctor) => {
-                    resultsDiv.innerHTML += `
-                        <div class="doctor-info">
-                            <img src="${doctor.profile_img}" alt="${doctor.doctor_name}" class = "profile-pic">
-                            <div class = "details">
-                                <strong>Doctor:</strong> ${doctor.doctor_name}<br>
-                                <strong>Specialization:</strong> ${doctor.speciality_name}<br>
-                                <strong>Hospital:</strong> ${doctor.hospital_name}<br>
-                                <strong>Availability:</strong> ${doctor.availability.day_of_week} at ${doctor.availability.time}<br>
-                            </div>
-                        </div>`;
-                });
-            })
-            .catch((error) => {
-                resultsDiv.innerHTML = '<p>There was an error fetching results. Please try again later.</p>';
-                console.error("Error:", error);
-            });
-        });
-        function redirectToInsurance(doctorId, hospitalId) {
-            window.location.href = `insurance.html?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
-}
-
-    </script>
+</div>
 </body>
 </html>
