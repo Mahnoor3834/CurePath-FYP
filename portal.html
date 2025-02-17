@@ -357,8 +357,8 @@
                     <a href="#">Pricing Plans</a>
                     <a href="#">Contact Us</a>
                 </nav>
-                <div class="auth-buttons">
-                    <a href="login.html" class="signup">Login</a>
+                <div class="auth-buttons" id="auth-buttons">
+                    <a href="login_form.php" class="signup">Login</a>
                     <a href="sign_up.html" class="signup">Sign up</a>
                 </div>
             </div>
@@ -424,6 +424,23 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("auth_status.php")
+                .then(response => response.json())
+                .then(data => {
+                    let authButtons = document.getElementById("auth-buttons");
+                    if (data.logged_in) {
+                       authButtons.innerHTML = `
+                                    <a href="dashboard.php" class="profile">Profile</a>
+                                    <a href="logoutBtn.php" class="logout">Logout</a>
+                                `;
+                    }
+                })
+                .catch(error => console.error("Error fetching auth status:", error));
+        });
+        </script>
 </div>
 </body>
 </html>

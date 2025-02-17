@@ -1,17 +1,7 @@
 <?php
 
-$host = "localhost:3306";
-$username = "root";
-$password = "";
-$dbname = "curepath_db";
+include 'db_connection.php';
 
-$conn = new mysqli($host, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die(json_encode(['status' => 'error', 'message' => 'Database connection failed: ' . $conn->connect_error]));
-}
-
-    // Get selected symptoms from the POST request
 $data = json_decode(file_get_contents("php://input"), true);
 $symptoms = $data['symptoms'] ?? [];
 

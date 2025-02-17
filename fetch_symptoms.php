@@ -1,14 +1,6 @@
 <?php
-$host = "localhost:3306";
-$username = "root";
-$password = "";
-$dbname = "curepath_db";
+include 'db_connection.php';
 
-$conn = new mysqli($host, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 $sql = "SELECT name FROM symptoms";
 $result = $conn->query($sql);
 

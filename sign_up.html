@@ -301,8 +301,8 @@
                     <a href="#">Pricing Plans</a>
                     <a href="#">Contact Us</a>
                 </nav>
-                <div class="auth-buttons">
-                    <a href="login.html" class="signup">Login</a>
+                <div class="auth-buttons" id="auth-buttons">
+                    <a href="login_form.php" class="signup">Login</a>
                 </div>
             </div>
 
@@ -310,7 +310,7 @@
                 <p class="features-subheading">
                     <span class="hero-heading">Create Your Account</span>
                 </p><br>
-            <form action="register.php" method="POST">
+            <form action="register.php" method="POST" onsubmit="return validateForm()">
             <div class="form-group">
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname" name="fullname" required>
@@ -360,11 +360,12 @@
                 <input type="checkbox" id="terms" name="terms" required>
                 <label for="terms">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
             </div>
+            <input type="hidden" name="csrf_token" value="YOUR_SECURE_CSRF_TOKEN">
             <div class="sign-button">
                 <button type="submit" class="signup-btn">Sign Up</button>
             </div>    
         </form>
-        <p class="terms">Already have an account? <a href="login.html">Log in here</a></p>
+        <p class="terms">Already have an account? <a href="login_form.php">Log in here</a></p>
         </div>
 
         <!-- Footer Section -->
@@ -393,6 +394,38 @@
             </div>
         </div>
     </footer>
+    <script>
+        function validateForm() {
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("confirm-password").value;
+    
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters long.");
+                return false;
+            }
+    
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+    
+            return true;
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("auth_status.php")
+                .then(response => response.json())
+                .then(data => {
+                    let authButtons = document.getElementById("auth-buttons");
+                    if (data.logged_in) {
+                       authButtons.innerHTML = `
+                                    <a href="dashboard.php" class="profile">Profile</a>
+                                    <a href="logoutBtn.php" class="logout">Logout</a>
+                                `;
+                    }
+                })
+                .catch(error => console.error("Error fetching auth status:", error));
+        });
+    </script>
 </div>
 </body>
 </html>

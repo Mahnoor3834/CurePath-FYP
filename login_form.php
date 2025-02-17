@@ -1,3 +1,9 @@
+<?php 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+} 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -310,6 +316,14 @@
                 <p class="features-subheading">
                     <span class="hero-heading">Login To Your Account</span>
                 </p><br>
+
+                <?php 
+                if (isset($_SESSION['error'])): 
+                    echo "<p style='color: red;'>" . $_SESSION['error'] . "</p>"; 
+                    unset($_SESSION['error']);
+                endif; 
+                ?>
+
                 <form action="login.php" method="POST">
                 <div class="form-group">
                     <label for="email">Email Address</label>
@@ -323,7 +337,7 @@
                 
                 <button type="submit" class="signup-btn">Login</button>
             </form>
-            <p class="forgot-password"><a href="#">Forgot Password?</a></p>
+            <p class="forgot-password"><a href="forgot_password_form.php">Forgot Password?</a></p>
             <p class="signup-link">Don't have an account? <a href="sign_up.html">Sign up here</a></p>
         </div>
 
