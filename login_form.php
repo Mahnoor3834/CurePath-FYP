@@ -358,7 +358,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <a href="about.html" class="footer-link">About</a>
                 <a href="features.html" class="footer-link">Features</a>
                 <a href="#" class="footer-link">Pricing Plans</a>
-                <a href="#" class="footer-link">Contact Us</a>
+                <a href="contactus.html" class="footer-link">Contact Us</a>
             </nav>
 
             <!-- Contact and Copyright -->
