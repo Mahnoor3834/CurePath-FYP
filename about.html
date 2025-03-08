@@ -71,7 +71,9 @@
         }
 
         .navbar .auth-buttons .login, 
-        .navbar .auth-buttons .signup {
+        .navbar .auth-buttons .signup,
+        .navbar .auth-buttons .profile, 
+        .navbar .auth-buttons .logout {
             padding: 8px 20px;
             border-radius: 50px;
             font-size: 0.9rem;
@@ -86,7 +88,9 @@
             background-color: transparent;
         }
 
-        .navbar .auth-buttons .signup {
+        .navbar .auth-buttons .signup,
+        .navbar .auth-buttons .profile, 
+        .navbar .auth-buttons .logout {
             background-color: #095d7e;
             color: white;
         }
@@ -233,10 +237,10 @@
                     <a href="about.html">About</a>
                     <a href="features.html">Features</a>
                     <a href="#">Pricing Plans</a>
-                    <a href="#">Contact Us</a>
+                    <a href="contactus.html">Contact Us</a>
                 </nav>
                 <div class="auth-buttons" id="auth-buttons">
-                    <a href="login_form.html" class="login">Login</a>
+                    <a href="login_form.php" class="login">Login</a>
                     <a href="sign_up.html" class="signup">Sign Up</a>
                 </div>
             </div>
@@ -316,7 +320,7 @@
                     <a href="about.html" class="footer-link">About</a>
                     <a href="features.html" class="footer-link">Features</a>
                     <a href="#" class="footer-link">Pricing Plans</a>
-                    <a href="#" class="footer-link">Contact Us</a>
+                    <a href="contactus.html" class="footer-link">Contact Us</a>
                 </nav>
 
                 <!-- Contact and Copyright -->
@@ -335,7 +339,7 @@
                         if (data.logged_in) {
                            authButtons.innerHTML = `
                                     <a href="dashboard.php" class="profile">Profile</a>
-                                    <a href="logoutBtn.php" class="logout">Logout</a>
+                                    <a href="logout.php" class="logout">Logout</a>
                                 `;
                         }
                     })

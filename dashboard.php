@@ -100,7 +100,8 @@ $conn->close();
         }
 
         .navbar .auth-buttons .login, 
-        .navbar .auth-buttons .logoutBtn {
+        .navbar .auth-buttons .logoutBtn, 
+        .navbar .auth-buttons .logout {
             padding: 8px 20px;
             border-radius: 50px;
             font-size: 0.9rem;
@@ -115,7 +116,8 @@ $conn->close();
             background-color: transparent;
         }
 
-        .navbar .auth-buttons .logoutBtn {
+        .navbar .auth-buttons .logoutBtn, 
+        .navbar .auth-buttons .logout {
             background-color: #095d7e;
             color: white;
         }
@@ -317,7 +319,7 @@ $conn->close();
     </style>
     </style>
 </head>
-<body>
+<!-- <body>
 
     <div class="navbar">
         <div class="logo">
@@ -345,5 +347,104 @@ $conn->close();
     <p><strong>Joined:</strong> <?php echo date("d M Y", strtotime($user['created_at'])); ?></p>
 </div>
 
+</body> -->
+
+<body>
+    <div class="firstportion">
+        <!-- Navbar -->
+        <div class="navbar">
+            <div class="logo">
+                <img src="logo.png" alt="CurePath Logo">
+            </div>
+            <nav class="navclass">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="features.html">Features</a>
+                <a href="#">Pricing Plans</a>
+                <a href="contactus.html">Contact Us</a>
+            </nav>
+            <div class="auth-buttons" id="auth-buttons">
+                <?php
+                if (isset($_SESSION['user_id'])) {
+                    // Fetch user data
+                    include 'db_connection.php';
+                    $user_id = $_SESSION['user_id'];
+                    $query = "SELECT fullname, email, phone, gender, dob, location, created_at FROM users WHERE id = ?";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("i", $user_id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $user = $result->fetch_assoc();
+                ?>
+                    <a href="logout.php" class="logout">Logout</a>
+                <?php
+                } else {
+                ?>
+                    <a href="login_form.php" class="signup">Login</a>
+                    <a href="sign_up.html" class="signup">Sign Up</a>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+
+        <div class="container">
+            <p class="features-subheading">
+                <span class="hero-heading">Personalised Patient Portal</span>
+                
+                <?php if (isset($_SESSION['user_id'])) { ?>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" value="<?php echo htmlspecialchars($user['fullname']); ?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" value="<?php echo date_diff(date_create($user['dob']), date_create('today'))->y; ?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <input type="text" id="gender" value="<?php echo htmlspecialchars($user['gender']); ?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="text" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="text" id="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" value="<?php echo htmlspecialchars($user['location']); ?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="joined">Joined On:</label>
+                        <input type="text" id="joined" value="<?php echo date("d M Y", strtotime($user['created_at'])); ?>" readonly>
+                    </div>
+                <?php } else { ?>
+                    <p>Please <a href="login_form.php">log in</a> to view your details.</p>
+                <?php } ?>
+                
+                <div class="file-upload">
+                    <label for="file">Upload File:</label>
+                    <input type="file" id="file">
+                </div>
+
+                <div class="uploaded-files">
+                    <h2>Uploaded Files</h2>
+                    <!-- <div class="file-item">
+                        <span>Medical_Report.pdf</span>
+                        <button class="view-btn">View</button>
+                    </div>
+                    <div class="file-item">
+                        <span>Blood_Test_Results.jpg</span>
+                        <button class="view-btn">View</button>
+                    </div> -->
+                </div>
+            </p><br>
+        </div>
+
+    </div>
 </body>
+
 </html>
