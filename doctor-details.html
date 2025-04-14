@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recommended Doctors</title>
+    <title>Doctor Details</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -129,25 +129,6 @@
             font-size: 16px;
             color: #333;
         }
-        
-        .detail-btn {
-            align-self: flex-start;
-            margin-top: 20px;
-            margin-right: 40px;
-            background-color: #095d7e;
-            color: white;
-            font-size: 1rem;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 200px;
-        }
-
-        .detail-btn:hover {
-            background-color: #14967F;
-        }
-        
         .insurance-btn {
             align-self: flex-start;
             margin-right: 20px;
@@ -176,7 +157,7 @@
             text-align: center;
             color: #095d7e;
         }
-
+        
         .results {
             margin-top: 20px;
         }
@@ -198,7 +179,7 @@
             text-align: center;
             border-radius: 5px;
             text-decoration: none;
-            max-width: 200px;
+            max-width: 250px;
         }
 
         .back-button:hover {
@@ -280,6 +261,14 @@
         .footer-email:hover {
             text-decoration: underline;
         }
+
+        .schedule {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #095d7e;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -302,21 +291,21 @@
                 </div>
             </div>
     <div class="container">
-        <h1>Recommended Doctors</h1>
+        <h1>Doctor Details</h1>
         <button onclick="redirectToInsurance('${doctor.doctor_id}', '${doctor.hospital_id}')"class = "insurance-btn">
             Check Insurance
         </button>
 
         <!--loading indicator -->
         <div id="loading" style="text-align: center; font-size: 14px; color: #095d7e; display: none;">
-            <p>Fetching recommended doctors...</p>
+            <p>Fetching doctor's details...</p>
             <img src="loading.gif" alt="Loading" width="100px">
         </div>
         
         <div class="results" id="results">
-            <!-- Doctor recommendations will appear here -->     
+            <!-- Doctor details will appear here -->     
         </div>
-        <a href="symptom-checker.html" class="back-button">Back to Symptom Checker</a>
+        <a href="#" onclick="goBackToRecommended()" class="back-button">Back to Recommended Doctors</a>
     </div>
 
      <!-- Footer Section -->
@@ -346,103 +335,76 @@
         </div>
     </footer>
 
-
     <script>
-        // Function to get URL query parameters
         document.addEventListener("DOMContentLoaded", function () {
-            const getQueryParams = () => {
-                const params = new URLSearchParams(window.location.search);
-                return params.get("symptoms")?.split(",") || [];
-            };
+            const params = new URLSearchParams(window.location.search);
+            const doctorId = new URLSearchParams(window.location.search).get("doctor_id");
 
-            const symptoms = getQueryParams();
-            
-            localStorage.setItem("lastSymptoms", symptoms.join(","));   // Save symptoms to localStorage for use on doctor-details page
-            
-            const resultsDiv = document.getElementById("results");
             const loadingDiv = document.getElementById("loading");
+            const resultsDiv = document.getElementById("results");
 
-            if (symptoms.length === 0) {
-                resultsDiv.innerHTML = '<p>No symptoms provided.</p>';
+            
+            if (!doctorId) {
+                resultsDiv.innerHTML = "<p>Invalid doctor ID.</p>";
                 return;
             }
 
             loadingDiv.style.display = "block";
 
-            // Send symptoms to the back end
-            fetch("fetch_doctors.php", {
+
+            fetch("fetch_doctordetails.php", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ symptoms: symptoms }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ doctor_id: doctorId }),
             })
             .then(response => response.json())
             .then((data) => {
-                
                 loadingDiv.style.display = "none";  // Hide loading indicator after fetching
 
                 if (data.status === "error") {
                     resultsDiv.innerHTML = `<p>${data.message}</p>`;
                     return;
                 }
+                
+                const lastSymptoms = localStorage.getItem("lastSymptoms") || "";   // Store the last used symptoms for the back button
 
-                if (data.doctors.length === 0) {
-                    resultsDiv.innerHTML = '<p>No doctors found for the selected symptoms.</p>';
-                    return;
-                }
+                let html = `
+                        <div class="doctor-info">
+                            <img src="${data.doctor.profile_img}" alt="${data.doctor.doctor_name}" class="profile-pic">
+                            <div class="details">
+                                <strong>Doctor:</strong> ${data.doctor.doctor_name}<br>
+                                <strong>Specialization:</strong> ${data.doctor.speciality_name}<br>
+                            </div>
+                        </div>
+                        <h3>Available Timings:</h3>
+                    `;
 
-                // Use a Set to avoid duplicate doctor name + specialization
-                const uniqueDoctors = new Map();
-
-                data.doctors.forEach((doctor, index) => {
-                    const key = doctor.doctor_name + '-' + doctor.speciality_name;
-                    if (!uniqueDoctors.has(doctor.doctor_id)) {
-                        uniqueDoctors.set(doctor.doctor_id, doctor);
-
-                        resultsDiv.innerHTML += `
-                            <div class="doctor-info">
-                                <img src="${doctor.profile_img}" alt="${doctor.doctor_name}" class="profile-pic">
-                                <div class="details">
-                                    <strong>Doctor:</strong> ${doctor.doctor_name}<br>
-                                    <strong>Specialization:</strong> ${doctor.speciality_name}<br>
-                                </div>
-                                <button class="detail-btn" onclick="viewDoctorDetails('${doctor.doctor_id}')">Check Details</button>
+                    data.schedule.forEach((slot) => {
+                        html += `
+                            <div class="schedule">
+                                <strong>Day:</strong> ${slot.day_of_week}<br>
+                                <strong>Time:</strong> ${slot.time}<br>
+                                <strong>Hospital:</strong> ${slot.hospital_name}<br>
                             </div>`;
-                    } 
-                });
-            })
+                    });
+
+                    resultsDiv.innerHTML = html;
+                })
+
             .catch((error) => {
                 loadingDiv.style.display = "none";
-                resultsDiv.innerHTML = '<p>There was an error fetching results. Please try again later.</p>';
+                resultsDiv.innerHTML = "<p>There was an error loading doctor details.</p>";
                 console.error("Error:", error);
             });
         });
+        function goBackToRecommended() {
+            const symptoms = localStorage.getItem("lastSymptoms") || "";
+            window.location.href = `recommended-doctors.html?symptoms=${encodeURIComponent(symptoms)}`;
+        }    
 
         function redirectToInsurance(doctorId, hospitalId) {
             window.location.href = `insurance.html?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
         }
-        
-        // Function to redirect to the details page
-        function viewDoctorDetails(doctorId) {
-            window.location.href = `doctor-details.html?doctor_id=${doctorId}`;
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch("auth_status.php")
-                .then(response => response.json())
-                .then(data => {
-                    let authButtons = document.getElementById("auth-buttons");
-                    if (data.logged_in) {
-                    authButtons.innerHTML = `
-                                            <a href="dashboard.php" class="profile">Profile</a>
-                                            <a href="logout.php" class="logout">Logout</a>
-                                        `;
-                    }
-                })
-                .catch(error => console.error("Error fetching auth status:", error));
-        });
-
     </script>
     </div>
 </body>
