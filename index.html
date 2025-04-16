@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CurePath</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -857,6 +858,7 @@
                 alert("Please select at least one symptom.");
                 return;
             }
+            localStorage.setItem("selectedSymptoms", JSON.stringify(symptoms));
 
             const queryParams = new URLSearchParams({ symptoms: symptoms.join(',') });
             window.location.href = `symptom-checker.html?${queryParams.toString()}`;
