@@ -766,7 +766,7 @@
             <a href="doctor-search.html" class="feature-card blue-card" style="width: 340px;">
                 <img src="docsearch.png" alt="Feature Icon">
                 <h3>Doctor Search & Reviews</h3>
-                <p style="padding-right: 20%;">Browse verified doctors, read reviews, and choose the right care provider based on experience and availability.</p>
+                <p style="padding-right: 20%;">Browse verified doctors, read reviews, and choose the right care provider based on experience and reviews.</p>
             </a>
         
             <a href="emergency-services.html" class="feature-card green-card" style="width: 400px;">
@@ -824,6 +824,10 @@
     <!--Hero section javascript-->
     <script>
         // Add a symptom to the search box
+        window.onload = function () {
+            localStorage.removeItem("selectedSymptoms");
+            localStorage.removeItem("recommendedSpecialityIds")
+        }
         function addSymptom(symptom) {
             const searchBox = document.getElementById("symptomSearch");
             const currentSymptoms = searchBox.value.split(',').map(s => s.trim());

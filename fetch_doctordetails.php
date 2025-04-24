@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 header("Content-Type: application/json");
 require_once "db_connection.php";
 
@@ -19,7 +23,8 @@ $query = "
         h.name AS hospital_name,
         h.hospital_id,
         a.day_of_week,
-        a.time
+        a.time,
+        d.avg_rating
     FROM Doctors d
     JOIN Speciality sp ON d.speciality_id = sp.speciality_id
     JOIN Doctor_Hospital dh ON d.doctor_id = dh.doctor_id
@@ -48,7 +53,8 @@ $doctorDetails = [
     "doctor_id" => $doctorData[0]['doctor_id'],
     "doctor_name" => $doctorData[0]['doctor_name'],
     "speciality_name" => $doctorData[0]['speciality_name'],
-    "profile_img" => !empty($doctorData[0]['profile_img']) ? $doctorData[0]['profile_img'] : "default_person.png"
+    "profile_img" => !empty($doctorData[0]['profile_img']) ? $doctorData[0]['profile_img'] : "default_person.png",
+    "rating" => $doctorData[0]['avg_rating']
 ];
 
 // Extract schedule
@@ -62,7 +68,24 @@ foreach ($doctorData as $row) {
     ];
 }
 
-echo json_encode(["status" => "success", "doctor" => $doctorDetails, "schedule" => $schedule]);
+// Fetch reviews for this doctor
+$reviewQuery = $conn->prepare("
+    SELECT dr.rating, dr.review, u.fullname AS reviewer_name
+    FROM doctor_ratings dr
+    JOIN users u ON dr.user_id = u.id
+    WHERE dr.doctor_id = ?
+    ORDER BY dr.created_at DESC
+");
+$reviewQuery->bind_param("i", $doctorId);
+$reviewQuery->execute();
+$reviewResult = $reviewQuery->get_result();
+
+$reviews = [];
+while ($row = $reviewResult->fetch_assoc()) {
+    $reviews[] = $row;
+}
+
+echo json_encode(["status" => "success", "doctor" => $doctorDetails, "schedule" => $schedule, "reviews" => $reviews]);
 
 $stmt->close();
 $conn->close();

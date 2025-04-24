@@ -169,27 +169,126 @@
 
         .search-row {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 10px;
         }
 
-        .search-input-box {
+        .search-input {
             padding: 10px;
-            flex: 3;
+            flex: 1;
             min-width: 200px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        .search-clear-btn {
-            padding: 10px;
-            flex: 1;
+        .search-button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .search-button-container button {
+            padding: 10px 20px;
             background-color: #095d7e;
             color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
         }
+
+        .doctor-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            flex: 1;
+        }
+
+        .doctor-info {
+            display: flex;
+            align-items: center; 
+            justify-content: space-between;
+            gap: 50px; 
+            margin-bottom: 15px; 
+            padding: 10px;
+            padding-left: 40px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #095d7e;
+            border-radius: 5px;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%; 
+            object-fit: cover; 
+        }
+
+        .details {
+            flex-grow: 1;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .detail-btn {
+            align-self: flex-start;
+            margin-top: 20px;
+            margin-right: 40px;
+            background-color: #095d7e;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 200px;
+        }
+
+        .detail-btn:hover {
+            background-color: #14967F;
+        }
+
+        .doctor-card .info { flex: 1; }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Optional: for responsiveness */
+            gap: 6px;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 6px 10px;
+            min-width: 32px;
+            width: 32px;
+            background-color: #095d7e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .pagination button:hover:not(.disabled) {
+            background-color: #0c7ba2;
+        }
+
+        .pagination button.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }               
 
         /* Footer Styles */
         .footer {
@@ -292,119 +391,108 @@
             </div>
 
             <div class="container">
-                <h1 class="hero-heading">Symptom Checker</h1>
-                <p>Select the symptoms you are experiencing:</p>
+                <h1>Search Doctors</h1>
+              
                 <div class="search-row">
-                    <input 
-                        type="text" 
-                        id="symptomSearch" 
-                        placeholder="Search for symptoms..." 
-                        oninput="filterSymptoms()" 
-                        class="search-input-box">
-                        
-                    <button type="button" onclick="clearSymptoms()" class="search-clear-btn">
-                        Clear Symptoms
-                    </button>
-                </div>                
-                <form id="symptomForm">
-                    <div class="symptoms-list" id="symptomsContainer">
+                  <input type="text" id="doctorName" placeholder="Doctor Name" class="search-input">
+                  <input type="text" id="speciality" placeholder="Specialization" class="search-input">
+                  <select id="hospitalSelect" class="search-input">
+                    <option value="">-- Select Hospital --</option>
+                  </select>
+                </div>  
+              
+                <div class="search-button-container">
+                    <div>
+                        <select id="sortOrder" class="search-input">
+                            <option value="">Sort by Rating</option>
+                            <option value="asc">Rating: Low to High</option>
+                            <option value="desc">Rating: High to Low</option>
+                          </select>        
                     </div>
-                    <button class="symptom-button" type="button" onclick="submitSymptoms()">Submit</button>
-                </form>
-                <div class="results" id="results"></div>
+                    <div>
+                        <button onclick="fetchDoctors()">Search</button>
+                    </div>                  
+                </div>
+              
+                <div id="resultsContainer"></div>
+                <div class="pagination" id="pagination"></div>
             </div>
+              
             
             <script>
-                // Function to get URL query parameters
-                function getQueryParams() {
-                    const params = new URLSearchParams(window.location.search);
-                    const symptoms = params.get("symptoms");
-                    return symptoms ? symptoms.split(',') : [];
-                }
-        
-                function filterSymptoms() {
-                    const searchValue = document.getElementById('symptomSearch').value.toLowerCase();
-                    const symptoms = document.querySelectorAll('.symptom-item');
+                let currentPage = 1;
+                const resultsPerPage = 10;
+                let allResults = [];
+                function fetchDoctors(page = 1) {
+                    currentPage = page;
+                    const name = document.getElementById("doctorName").value;
+                    const speciality = document.getElementById("speciality").value;
+                    const hospital = document.getElementById("hospitalSelect").value;
 
-                    symptoms.forEach(item => {
-                        const label = item.querySelector('label').innerText.toLowerCase();
-                        const checkbox = item.querySelector('input');
-
-                        if (label.includes(searchValue)) {
-                            item.style.display = 'flex';
-
-                            // If this symptom is stored but not yet checked, check it
-                            const selected = JSON.parse(localStorage.getItem("selectedSymptoms") || "[]");
-                            if (selected.includes(checkbox.value) && !checkbox.checked) {
-                                checkbox.checked = true;
-                            }
-                        } else {
-                            item.style.display = 'none';
-                        }                    
+                    fetch("fetch_doctors_by_filters.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ name, speciality, hospital })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        const seen = new Set();
+                        allResults = data.filter(doc => {
+                            if (seen.has(doc.doctor_id)) return false;
+                            seen.add(doc.doctor_id);
+                            return true;
+                        });
+                        const sortOrder = document.getElementById("sortOrder").value;
+                        if (sortOrder === "asc") {
+                            allResults.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+                        } else if (sortOrder === "desc") {
+                            allResults.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                        }
+                        renderResults();
                     });
                 }
 
-                function clearSymptoms() {
-                    const checkboxes = document.querySelectorAll('input[name="symptoms"]');
-                    checkboxes.forEach((checkbox) => {
-                        checkbox.checked = false;
-                    });
+                function renderResults() {
+                    const resultsDiv = document.getElementById("resultsContainer");
+                    const paginationDiv = document.getElementById("pagination");
+                    resultsDiv.innerHTML = "";
+                    paginationDiv.innerHTML = "";
 
-                    localStorage.removeItem("selectedSymptoms");
-                    const symptoms = document.querySelectorAll('.symptom-item');
-                    symptoms.forEach(item => {
-                        item.style.display = 'flex';
-                    });
-                }
-
-
-                function submitSymptoms() {
-                    const selectedSymptoms = [];
-                    const checkboxes = document.querySelectorAll('input[name="symptoms"]:checked');
-        
-                    checkboxes.forEach((checkbox) => {
-                        selectedSymptoms.push(checkbox.value);
-                    });
-        
-                    if (selectedSymptoms.length === 0) {
-                        alert("Please select at least one symptom.");
+                    if (allResults.length === 0) {
+                        resultsDiv.innerHTML = "<p>No doctors found.</p>";
                         return;
                     }
-                    localStorage.setItem("selectedSymptoms", JSON.stringify(selectedSymptoms));
-        
-                    const queryParams = new URLSearchParams({ symptoms: selectedSymptoms.join(',') });
-                    window.location.href = `recommended-doctors.html?${queryParams.toString()}`;
+
+                    const totalPages = Math.ceil(allResults.length / resultsPerPage);
+                    const start = (currentPage - 1) * resultsPerPage;
+                    const end = start + resultsPerPage;
+
+                    allResults.slice(start, end).forEach(doc => {
+                        resultsDiv.innerHTML += `
+                        <div class="doctor-card">
+                            <img src="${doc.profile_img}" alt="${doc.name}" class="profile-pic">
+                            <div class="details">
+                                <strong>Doctor:</strong> ${doc.name}<br>
+                                <strong>Specialization:</strong> ${doc.speciality}<br>
+                                <strong>Rating:</strong> ${doc.rating > 0 ? doc.rating + ' / 5' : 'No ratings yet'}<br>
+                            </div>
+                            <button class="detail-btn" onclick="viewDoctorDetails('${doc.doctor_id}')">Check Details</button>
+                        </div>
+                        `;
+                    });
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        paginationDiv.innerHTML += `
+                        <button class="${i === currentPage ? 'disabled' : ''}" onclick="fetchDoctors(${i})">${i}</button>
+                        `;
+                    }
+                }
+                function viewDoctorDetails(doctorId) {
+                    window.location.href = `doctor-details.html?doctor_id=${doctorId}`;
                 }
 
-            document.addEventListener("DOMContentLoaded", function () {
-                const preselectedSymptoms = getQueryParams();
-                const storedSymptoms = JSON.parse(localStorage.getItem("selectedSymptoms") || "[]");
-                const allSymptoms = [...new Set([...preselectedSymptoms, ...storedSymptoms])];
-
-                // Fetch symptoms dynamically and preselect previously selected ones
-                fetch("fetch_symptoms.php")
-                    .then(response => response.text())
-                    .then(data => {
-                        const container = document.getElementById("symptomsContainer");
-                        container.innerHTML = data;
-
-                        localStorage.setItem("selectedSymptoms", JSON.stringify(allSymptoms));
-
-                        // Preselect previously selected symptoms
-                        setTimeout(() => {
-                            allSymptoms.forEach(symptom => {
-                                const checkbox = container.querySelector(`input[value="${symptom}"]`);
-                                if (checkbox) {
-                                    checkbox.checked = true;
-                                    checkbox.closest(".symptom-item").style.display = "flex"; // make sure visible
-                                }
-                            });
-                        }, 0);
-                    })
-                    .catch(error => console.error("Error loading symptoms:", error));
-        
-            
-                fetch("auth_status.php")
+                document.addEventListener("DOMContentLoaded", function () {            
+                    fetch("auth_status.php")
                     .then(response => response.json())
                     .then(data => {
                         let authButtons = document.getElementById("auth-buttons");
@@ -415,6 +503,18 @@
                         }
                     })
                     .catch(error => console.error("Error fetching auth status:", error));
+                    
+                    fetch('fetch_hospitals.php')
+                    .then(res => res.json())
+                    .then(data => {
+                    const select = document.getElementById("hospitalSelect");
+                    data.forEach(h => {
+                        const opt = document.createElement("option");
+                        opt.value = h.hospital_id;
+                        opt.textContent = h.name;
+                        select.appendChild(opt);
+                    });
+                    });
                 });
 
             </script>

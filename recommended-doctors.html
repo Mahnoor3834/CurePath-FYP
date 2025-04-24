@@ -205,6 +205,28 @@
         .back-button:hover {
             background-color: #14967F;
         }
+
+        .pagination-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination-container button {
+            margin: 2px;
+            padding: 8px 12px;
+            border: 1px solid #095d7e;
+            background-color: white;
+            color: #095d7e;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pagination-container button.active {
+            background-color: #095d7e;
+            color: white;
+            font-weight: bold;
+        }
+
         /* Footer Styles */
         .footer {
             color: #095d7e;
@@ -317,6 +339,7 @@
         <div class="results" id="results">
             <!-- Doctor recommendations will appear here -->     
         </div>
+        <div id="pagination" class="pagination-container"></div>
         <a href="symptom-checker.html" class="back-button">Back to Symptom Checker</a>
     </div>
 
@@ -370,7 +393,7 @@
 
             loadingDiv.style.display = "block";
 
-            // Send symptoms to the back end
+            // Send symptoms to the back end 
             fetch("fetch_doctors.php", {
                 method: "POST",
                 headers: {
@@ -380,7 +403,6 @@
             })
             .then(response => response.json())
             .then((data) => {
-                
                 loadingDiv.style.display = "none";  // Hide loading indicator after fetching
 
                 if (data.status === "error") {
@@ -393,25 +415,62 @@
                     return;
                 }
 
-                // Use a Set to avoid duplicate doctor name + specialization
+                // Use a Map to ensure unique doctor entries by ID
                 const uniqueDoctors = new Map();
 
-                data.doctors.forEach((doctor, index) => {
-                    const key = doctor.doctor_name + '-' + doctor.speciality_name;
+                data.doctors.forEach(doctor => {
                     if (!uniqueDoctors.has(doctor.doctor_id)) {
                         uniqueDoctors.set(doctor.doctor_id, doctor);
+                    }
+                });
 
+                const doctorsArray = Array.from(uniqueDoctors.values());
+                const uniqueSpecialityIds = [...new Set(doctorsArray.map(doc => doc.speciality_id))];
+                localStorage.setItem("recommendedSpecialityIds", JSON.stringify(uniqueSpecialityIds));
+                console.log(doctorsArray);
+                const resultsPerPage = 15;
+                let currentPage = 1;
+
+                function displayPage(page) {
+                    resultsDiv.innerHTML = "";
+                    const start = (page - 1) * resultsPerPage;
+                    const end = start + resultsPerPage;
+                    const doctorsToShow = doctorsArray.slice(start, end);
+
+                    doctorsToShow.forEach(doctor => {
                         resultsDiv.innerHTML += `
                             <div class="doctor-info">
                                 <img src="${doctor.profile_img}" alt="${doctor.doctor_name}" class="profile-pic">
                                 <div class="details">
                                     <strong>Doctor:</strong> ${doctor.doctor_name}<br>
                                     <strong>Specialization:</strong> ${doctor.speciality_name}<br>
+                                    <strong>Hospital:</strong> ${getCleanHospitalName(doctor.hospital_name)}<br>
                                 </div>
                                 <button class="detail-btn" onclick="viewDoctorDetails('${doctor.doctor_id}')">Check Details</button>
                             </div>`;
-                    } 
-                });
+                    });
+
+                    renderPagination(page);
+                }
+
+                function renderPagination(current) {
+                    const paginationDiv = document.getElementById("pagination");
+                    paginationDiv.innerHTML = "";
+
+                    const totalPages = Math.ceil(doctorsArray.length / resultsPerPage);
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        const btn = document.createElement("button");
+                        btn.innerText = i;
+                        btn.className = i === current ? "active" : "";
+                        btn.onclick = () => {
+                            currentPage = i;
+                            displayPage(currentPage);
+                        };
+                        paginationDiv.appendChild(btn);
+                    }
+                }
+                displayPage(currentPage);
             })
             .catch((error) => {
                 loadingDiv.style.display = "none";
@@ -423,6 +482,25 @@
         function redirectToInsurance(doctorId, hospitalId) {
             window.location.href = `insurance.html?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
         }
+
+        function getCleanHospitalName(fullName) {
+            const mappings = [
+                { keywords: ["AKUH", "Aga Khan"], name: "Aga Khan Hospital" },
+                { keywords: ["Liaquat National"], name: "Liaquat National Hospital" },
+                { keywords: ["Ziauddin"], name: "Ziauddin Hospital" },
+            ];
+
+            for (const map of mappings) {
+                for (const keyword of map.keywords) {
+                    if (fullName.toLowerCase().includes(keyword.toLowerCase())) {
+                        return map.name;
+                    }
+                }
+            }
+
+            return fullName.split(',')[0].trim(); // fallback to first part
+        }
+
         
         // Function to redirect to the details page
         function viewDoctorDetails(doctorId) {
