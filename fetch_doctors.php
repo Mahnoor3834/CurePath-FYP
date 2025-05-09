@@ -16,8 +16,10 @@ file_put_contents("debug.log", "Symptoms: " . implode(", ", $symptoms) . "\n", F
 $symptomPlaceholders = implode(',', array_fill(0, count($symptoms), '?'));
 $query = "
     SELECT DISTINCT 
+        d.doctor_id,   
         d.name AS doctor_name, 
-        sp.name AS speciality_name, 
+        sp.name AS speciality_name,
+        d.speciality_id, 
         h.name AS hospital_name,
         a.day_of_week,
         a.time,
@@ -50,8 +52,10 @@ $default_image = "default_person.png";
 $doctors = [];
 while ($row = $result->fetch_assoc()) {
     $doctors[] = [
+        'doctor_id' => $row['doctor_id'],
         'doctor_name' => $row['doctor_name'],
         'speciality_name' => $row['speciality_name'],
+        'speciality_id' => $row['speciality_id'],
         'hospital_name' => $row['hospital_name'],
         'availability' => [
             'day_of_week' => $row['day_of_week'],

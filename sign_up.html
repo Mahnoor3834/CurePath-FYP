@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
     <title>Sign Up - CurePath</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -356,28 +357,44 @@
                 <input type="password" id="confirm-password" name="confirm-password" required>
             </div>
             
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <input type="checkbox" id="terms" name="terms" required>
                 <label for="terms">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
-            </div>
+            </div> -->
             <input type="hidden" name="csrf_token" value="YOUR_SECURE_CSRF_TOKEN">
             <div class="sign-button">
                 <button type="submit" class="signup-btn">Sign Up</button>
             </div>    
         </form>
-        <p class="terms">Already have an account? <a href="login_form.html">Log in here</a></p>
+        <p class="terms">Already have an account? <a href="login_form.php">Log in here</a></p>
         </div>
 
         <!-- Footer Section -->
-    <footer class="footer">
-        <div class="footer-container">
-            <!-- Logo and Description -->
-            <div class="footer-logo">
-                <img src="logo.png" alt="CurePath Logo" class="footer-logo-img">
-                <p class="footer-description">
-                    Empowering healthcare with smarter solutions. Discover the best doctors, tailored for your health needs.
-                </p>
+        <footer class="footer">
+            <div class="footer-container">
+                <!-- Logo and Description -->
+                <div class="footer-logo">
+                    <img src="logo.png" alt="CurePath Logo" class="footer-logo-img">
+                    <p class="footer-description">
+                        Empowering healthcare with smarter solutions. Discover the best doctors, tailored for your health needs.
+                    </p>
+                </div>
+    
+                <!-- Navigation Links -->
+                <nav class="footer-nav">
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="about.html" class="footer-link">About</a>
+                    <a href="features.html" class="footer-link">Features</a>
+                    <a href="#" class="footer-link">Pricing Plans</a>
+                    <a href="contactus.html" class="footer-link">Contact Us</a>
+                </nav>
+    
+                <!-- Contact and Copyright -->
+                <div class="footer-contact">
+                    <p>© 2024 CurePath. All Rights Reserved.</p>
+                </div>
             </div>
+<<<<<<< HEAD
 
             <!-- Navigation Links -->
             <nav class="footer-nav">
@@ -394,6 +411,9 @@
             </div>
         </div>
     </footer>
+=======
+        </footer>
+>>>>>>> dbb3eedd65372ffbdb5365017c4aaae68b4d255b
     <script>
         function validateForm() {
             let password = document.getElementById("password").value;
@@ -419,7 +439,7 @@
                     if (data.logged_in) {
                        authButtons.innerHTML = `
                                     <a href="dashboard.php" class="profile">Profile</a>
-                                    <a href="logoutBtn.php" class="logout">Logout</a>
+                                    <a href="logout.php" class="logout">Logout</a>
                                 `;
                     }
                 })

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CurePath</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -75,7 +76,9 @@
         }
 
         .navbar .auth-buttons .login, 
-        .navbar .auth-buttons .signup {
+        .navbar .auth-buttons .signup,
+        .navbar .auth-buttons .profile, 
+        .navbar .auth-buttons .logout{
             padding: 8px 20px;
             border-radius: 50px;
             font-size: 0.9rem;
@@ -90,7 +93,9 @@
             background-color: transparent;
         }
 
-        .navbar .auth-buttons .signup {
+        .navbar .auth-buttons .signup,
+        .navbar .auth-buttons .profile, 
+        .navbar .auth-buttons .logout {
             background-color: #095d7e;
             color: white;
         }
@@ -761,7 +766,7 @@
             <a href="doctor-search.html" class="feature-card blue-card" style="width: 340px;">
                 <img src="docsearch.png" alt="Feature Icon">
                 <h3>Doctor Search & Reviews</h3>
-                <p style="padding-right: 20%;">Browse verified doctors, read reviews, and choose the right care provider based on experience and availability.</p>
+                <p style="padding-right: 20%;">Browse verified doctors, read reviews, and choose the right care provider based on experience and reviews.</p>
             </a>
         
             <a href="emergency-services.html" class="feature-card green-card" style="width: 400px;">
@@ -819,6 +824,10 @@
     <!--Hero section javascript-->
     <script>
         // Add a symptom to the search box
+        window.onload = function () {
+            localStorage.removeItem("selectedSymptoms");
+            localStorage.removeItem("recommendedSpecialityIds")
+        }
         function addSymptom(symptom) {
             const searchBox = document.getElementById("symptomSearch");
             const currentSymptoms = searchBox.value.split(',').map(s => s.trim());
@@ -853,6 +862,7 @@
                 alert("Please select at least one symptom.");
                 return;
             }
+            localStorage.setItem("selectedSymptoms", JSON.stringify(symptoms));
 
             const queryParams = new URLSearchParams({ symptoms: symptoms.join(',') });
             window.location.href = `symptom-checker.html?${queryParams.toString()}`;
@@ -864,8 +874,8 @@
                     let authButtons = document.getElementById("auth-buttons");
                     if (data.logged_in) {
                        authButtons.innerHTML = `
-                                    <a href="dashboard.php" class="profile">Profile</a>
-                                    <a href="logoutBtn.php" class="logout">Logout</a>
+                                    <a href="dashboard.php" class="profile navclass">Profile</a>
+                                    <a href="logout.php" class="logout">Logout</a>
                                 `;
                     }
                 })
