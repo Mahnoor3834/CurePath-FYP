@@ -433,7 +433,7 @@
                     <p style="padding-right: 60%;">Identify symptoms to receive tailored recommendations for specialists within seconds.</p>
                 </a>
             
-                <a href="insurance.html" class="feature-card green-card" style="width: 490px;">
+                <div id="insuranceCard" class="feature-card green-card" style="width: 490px; cursor: pointer;">
                     <img src="cost.png" alt="Feature Icon">
                     <h3>Cost Estimation</h3>
                     <p>Get upfront treatment cost estimates to plan your healthcare expenses confidently.</p>
@@ -508,6 +508,17 @@
                                     <a href="dashboard.php" class="profile">Profile</a>
                                     <a href="logout.php" class="logout">Logout</a>
                                 `;
+                    }
+                    const insuranceCard = document.getElementById("insuranceCard");
+                    if (insuranceCard) {
+                        insuranceCard.addEventListener("click", function () {
+                            if (data.logged_in) {
+                                window.location.href = "insurance.html";
+                            } else {
+                                alert("Please log in to access insurance-related features.");
+                                window.location.href = "login_form.php";
+                            }
+                        });
                     }
                 })
                 .catch(error => console.error("Error fetching auth status:", error));

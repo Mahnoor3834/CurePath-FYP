@@ -672,16 +672,16 @@
                     <div class="hover-suggestions">
                         <span onclick="addSymptom('Headache')">Headache</span>
                         <span onclick="addSymptom('Fever')">Fever</span>
-                        <span onclick="addSymptom('Chest Pain')">Chest Pain</span>
+                        <span onclick="addSymptom('Chest pain')">Chest Pain</span>
                         <span onclick="addSymptom('Fatigue')">Fatigue</span>
                         <span onclick="addSymptom('Nausea')">Nausea</span>
                         <span onclick="addSymptom('Sneezing')">Sneezing</span>
                         <span onclick="addSymptom('Diarrhea')">Diarrhea</span>
                         <span onclick="addSymptom('Cough')">Cough</span>
-                        <span onclick="addSymptom('Vomitting')">Vomitting</span>
+                        <span onclick="addSymptom('Vomiting')">Vomitting</span>
                         <span onclick="addSymptom('Dehydration')">Dehydration</span>
                         <span onclick="addSymptom('Shivering')">Shivering</span>
-                        <span onclick="addSymptom('Muscle Pain')">Muscle Pain</span>
+                        <span onclick="addSymptom('Muscle pain')">Muscle Pain</span>
                         <span onclick="addSymptom('Constipation')">Constipation</span>
                         <span onclick="addSymptom('Liver swelling')">Liver swelling</span>
                         <span onclick="addSymptom('Acidity')">Acidity</span>
@@ -757,7 +757,7 @@
                 <p style="padding-right: 60%;">Identify symptoms to receive tailored recommendations for specialists within seconds.</p>
             </a>
         
-            <a href="insurance.html" class="feature-card green-card" style="width: 490px;">
+            <div id="insuranceCard" class="feature-card green-card" style="width: 490px; cursor: pointer;">
                 <img src="cost.png" alt="Feature Icon">
                 <h3>Cost Estimation</h3>
                 <p>Get upfront treatment cost estimates to plan your healthcare expenses confidently.</p>
@@ -877,6 +877,17 @@
                                     <a href="dashboard.php" class="profile navclass">Profile</a>
                                     <a href="logout.php" class="logout">Logout</a>
                                 `;
+                    }
+                    const insuranceCard = document.getElementById("insuranceCard");
+                    if (insuranceCard) {
+                        insuranceCard.addEventListener("click", function () {
+                            if (data.logged_in) {
+                                window.location.href = "insurance.html";
+                            } else {
+                                alert("Please log in to access insurance-related features.");
+                                window.location.href = "login_form.php";
+                            }
+                        });
                     }
                 })
                 .catch(error => console.error("Error fetching auth status:", error));
