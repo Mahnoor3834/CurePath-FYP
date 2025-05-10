@@ -268,8 +268,8 @@
         .footer-email:hover {
             text-decoration: underline;
         }
-
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="firstportion">
@@ -367,7 +367,12 @@
                     });
         
                     if (selectedSymptoms.length === 0) {
-                        alert("Please select at least one symptom.");
+                        Swal.fire({
+                        icon: 'info',
+                        title: 'No Symptom Selected',
+                        text: 'Please select at least one symptom.',
+                        confirmButtonText: 'Cancel'
+                        });
                         return;
                     }
                     localStorage.setItem("selectedSymptoms", JSON.stringify(selectedSymptoms));

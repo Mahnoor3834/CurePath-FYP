@@ -425,22 +425,6 @@ $conn->close();
                     <p>Please <a href="login_form.php">log in</a> to view your details.</p>
                 <?php } ?>
                 
-                <div class="file-upload">
-                    <label for="file">Upload File:</label>
-                    <input type="file" id="file">
-                </div>
-
-                <div class="uploaded-files">
-                    <h2>Uploaded Files</h2>
-                    <!-- <div class="file-item">
-                        <span>Medical_Report.pdf</span>
-                        <button class="view-btn">View</button>
-                    </div>
-                    <div class="file-item">
-                        <span>Blood_Test_Results.jpg</span>
-                        <button class="view-btn">View</button>
-                    </div> -->
-                </div>
             </p><br>
         </div>
 

@@ -12,10 +12,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm-password'];
     
-    if ($password !== $confirm_password) {
-        echo "<script>alert('Passwords do not match!'); window.history.back();</script>";
-        exit;
-    }
+if ($password !== $confirm_password) {
+    echo '
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Error</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body>
+        <script>
+            Swal.fire({
+                icon: "error",
+                title: "Oops!",
+                text: "Passwords do not match!"
+            }).then(() => {
+                window.history.back();
+            });
+        </script>
+    </body>
+    </html>';
+    exit;
+}
     
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     
@@ -26,7 +45,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->store_result();
     
     if ($stmt->num_rows > 0) {
-        echo "<script>alert('Email already exists! Please use a different email.'); window.history.back();</script>";
+        echo '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Redirecting...</title>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            </head>
+            <body>
+                <script>
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Email Already Registered",
+                        text: "Please use a different email."
+                    }).then(() => {
+                        window.history.back();
+                    });
+                </script>
+            </body>
+            </html>';
+
         exit;
     }
     $stmt->close();
@@ -36,11 +75,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sssssss", $fullname, $email, $phone, $gender, $dob, $location, $hashed_password);
     
     if ($stmt->execute()) {
-        echo "<script>alert('Registration successful!'); window.location.href='login_form.php';</script>";
+        echo '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Redirecting...</title>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            </head>
+            <body>
+                <script>
+                    Swal.fire({
+                            icon: "success",
+                            title: "Registration Successful",
+                            text: "You can now log in."
+                        }).then(() => {
+                            window.location.href = "login_form.php";
+                        });
+                </script>
+            </body>
+            </html>';
     } else {
-        echo "<script>alert('Registration failed. Please try again.'); window.history.back();</script>";
+        echo '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Redirecting...</title>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            </head>
+            <body>
+                <script>
+                    Swal.fire({
+                            icon: "error",
+                            title: "Registration Failed",
+                            text: "Something went wrong. Please try again."
+                        }).then(() => {
+                            window.history.back();
+                        });
+                </script>
+            </body>
+            </html>';
     }
-    
     $stmt->close();
     $conn->close();
 }

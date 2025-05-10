@@ -401,6 +401,7 @@
         }
 
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="firstportion">
@@ -463,7 +464,7 @@
                     <p>Store, access, and share your medical records securely whenever you need them.</p>
                 </a>
             
-                <a href="insurance.html" class="feature-card yellow-card" style="width: 680px;">
+                <div id="insuranceCard" class="feature-card green-card" style="width: 490px; cursor: pointer;">
                     <img src="disease.png" alt="Feature Icon">
                     <h3>Insurance Compatibility</h3>
                     <p style="padding-right: 60%;">Filter doctors based on your insurance coverage for stress-free, affordable care.</p>
@@ -515,8 +516,14 @@
                             if (data.logged_in) {
                                 window.location.href = "insurance.html";
                             } else {
-                                alert("Please log in to access insurance-related features.");
+                                Swal.fire({
+                                icon: 'info',
+                                title: 'Login Required',
+                                text: 'Please log in to access insurance-related features.',
+                                confirmButtonText: 'Login'
+                                }).then(() => {
                                 window.location.href = "login_form.php";
+                                });
                             }
                         });
                     }

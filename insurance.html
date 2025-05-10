@@ -375,6 +375,7 @@
         }
 
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="firstportion">
@@ -487,7 +488,11 @@
                 const insuranceId = document.getElementById("insurance").value;
 
                 if (!insuranceId) {
-                    alert("Please select a hospital.");
+                        Swal.fire({
+                        icon: 'warning',
+                        title: 'No Hospital Selected',
+                        text: 'Please select a hospital.'
+                        });
                     return;
                 }
 
