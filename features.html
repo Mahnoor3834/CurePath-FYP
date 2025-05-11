@@ -434,7 +434,7 @@
                     <p style="padding-right: 60%;">Identify symptoms to receive tailored recommendations for specialists within seconds.</p>
                 </a>
             
-                <a href="insurance.html" class="feature-card green-card" style="width: 490px; cursor: pointer;">
+                <a href="insurance.php" class="feature-card green-card" style="width: 490px; cursor: pointer;">
                     <img src="cost.png" alt="Feature Icon">
                     <h3>Cost Estimation</h3>
                     <p>Get upfront treatment cost estimates to plan your healthcare expenses confidently.</p>
@@ -458,10 +458,10 @@
                     <p style="padding-right: 30%;">Read authentic patient reviews to make informed decisions about your healthcare provider.</p>             
                 </a>
             
-                <a href="portal.html" class="feature-card green-card" style="width: 450px;">
+                <a href="dashboard.php" class="feature-card green-card" style="width: 450px;">
                     <img src="portal.png" alt="Feature Icon">
                     <h3>Personalized Patient Portal</h3>
-                    <p>Store, access, and share your medical records securely whenever you need them.</p>
+                    <p>Explore treatment costs and hospital compatibility, and add doctor ratings and reviews.</p>
                 </a>
             
                 <div id="insuranceCard" class="feature-card green-card" style="width: 490px; cursor: pointer;">
@@ -499,6 +499,10 @@
         </footer>
     </div>
     <script>
+        window.onload = function () {
+            localStorage.removeItem("selectedSymptoms");
+            localStorage.removeItem("recommendedSpecialityIds")
+        }
         document.addEventListener("DOMContentLoaded", function () {
             fetch("auth_status.php")
                 .then(response => response.json())
@@ -514,7 +518,7 @@
                     if (insuranceCard) {
                         insuranceCard.addEventListener("click", function () {
                             if (data.logged_in) {
-                                window.location.href = "insurance.html";
+                                window.location.href = "insurance.php";
                             } else {
                                 Swal.fire({
                                 icon: 'info',

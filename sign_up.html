@@ -205,6 +205,23 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
         }
 
+        .insurance-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .insurance-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #fff;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
         .sign-button {
             justify-content: center;
         }
@@ -323,10 +340,10 @@
                     <input type="email" id="email" name="email" required>
                 </div>
                 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="phone">Phone Number</label>
                     <input type="tel" id="phone" name="phone" required>
-                </div>
+                </div> -->
                 
                 <div class="form-group">
                     <label for="gender">Gender</label>
@@ -346,6 +363,11 @@
                 <div class="form-group">
                     <label for="location">Location</label>
                     <input type="text" id="location" name="location" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="insurance-hospitals">Choose Compatible Insurance Hospitals</label>
+                    <div id="insurance-hospitals" class="insurance-checkboxes"></div>
                 </div>
                 
                 <div class="form-group">
@@ -405,7 +427,8 @@
                 Swal.fire({
                 icon: 'warning',
                 title: 'Weak Password',
-                text: 'Password must be at least 6 characters long.'
+                text: 'Password must be at least 6 characters long.',
+                confirmButtonText: 'Cancel'
             });
                 return false;
             }
@@ -414,7 +437,8 @@
                 Swal.fire({
                 icon: 'error',
                 title: 'Mismatch',
-                text: 'Passwords do not match.'
+                text: 'Passwords do not match.',
+                confirmButtonText: 'Cancel'
             });
                 return false;
             }
@@ -434,6 +458,32 @@
                     }
                 })
                 .catch(error => console.error("Error fetching auth status:", error));
+            fetch("fetch_hospitals.php")
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById("insurance-hospitals");
+
+                data.forEach(hospital => {
+                const checkboxId = `hospital_${hospital.hospital_id}`;
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "insurance-option";
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.name = "insurance_hospitals[]";
+                checkbox.value = hospital.hospital_id;
+                checkbox.id = checkboxId;
+
+                const label = document.createElement("label");
+                label.setAttribute("for", checkboxId);
+                label.textContent = hospital.name;
+
+                wrapper.appendChild(checkbox);
+                wrapper.appendChild(label);
+                container.appendChild(wrapper);
+                });
+            });
         });
     </script>
 </div>

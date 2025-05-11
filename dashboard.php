@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-$sql = "SELECT fullname, email, phone, gender, dob, location, created_at FROM users WHERE id = ?";
+$sql = "SELECT fullname, email, gender, dob, location, created_at FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -22,6 +22,21 @@ if ($result->num_rows === 1) {
     header("Location: login_form.php");
     exit();
 }
+
+$sql_hospitals = "SELECT h.hospital_id FROM hospitals h 
+                  INNER JOIN user_insurance_hospitals uih ON h.hospital_id = uih.hospital_id 
+                  WHERE uih.user_id = ?";
+$stmt_hospitals = $conn->prepare($sql_hospitals);
+$stmt_hospitals->bind_param("i", $user_id);
+$stmt_hospitals->execute();
+$result_hospitals = $stmt_hospitals->get_result();
+
+$insurance_hospitals = [];
+while ($row = $result_hospitals->fetch_assoc()) {
+    $insurance_hospitals[] = $row['hospital_id'];
+}
+
+$stmt_hospitals->close();
 
 $stmt->close();
 $conn->close();
@@ -239,6 +254,30 @@ $conn->close();
             text-decoration: underline;
         }
 
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .checkbox-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #fff;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
         /* Footer Styles */
         .footer {
             color: #095d7e;
@@ -319,36 +358,6 @@ $conn->close();
     </style>
     </style>
 </head>
-<!-- <body>
-
-    <div class="navbar">
-        <div class="logo">
-            <img src="logo.png" alt="CurePath Logo">
-        </div>
-        <nav class="navclass">
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="features.html">Features</a>
-            <a href="#">Pricing Plans</a>
-            <a href="#">Contact Us</a>
-        </nav>
-        <div class="auth-buttons">
-            <a href="logout.php" class="logoutBtn">Logout</a>
-        </div>
-    </div>
-
-<div class="container">
-    <h2>Welcome, <?php echo htmlspecialchars($user['fullname']); ?>!</h2>
-    <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-    <p><strong>Phone:</strong> <?php echo htmlspecialchars($user['phone']); ?></p>
-    <p><strong>Gender:</strong> <?php echo htmlspecialchars($user['gender']); ?></p>
-    <p><strong>Date of Birth:</strong> <?php echo date("d M Y", strtotime($user['dob'])); ?></p>
-    <p><strong>Location:</strong> <?php echo htmlspecialchars($user['location']); ?></p>
-    <p><strong>Joined:</strong> <?php echo date("d M Y", strtotime($user['created_at'])); ?></p>
-</div>
-
-</body> -->
-
 <body>
     <div class="firstportion">
         <!-- Navbar -->
@@ -369,7 +378,7 @@ $conn->close();
                     // Fetch user data
                     include 'db_connection.php';
                     $user_id = $_SESSION['user_id'];
-                    $query = "SELECT fullname, email, phone, gender, dob, location, created_at FROM users WHERE id = ?";
+                    $query = "SELECT fullname, email, gender, dob, location, created_at FROM users WHERE id = ?";
                     $stmt = $conn->prepare($query);
                     $stmt->bind_param("i", $user_id);
                     $stmt->execute();
@@ -410,17 +419,32 @@ $conn->close();
                         <input type="text" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="phone">Phone:</label>
-                        <input type="text" id="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="location">Location:</label>
-                        <input type="text" id="location" value="<?php echo htmlspecialchars($user['location']); ?>" readonly>
-                    </div>
-                    <div class="form-group">
                         <label for="joined">Joined On:</label>
                         <input type="text" id="joined" value="<?php echo date("d M Y", strtotime($user['created_at'])); ?>" readonly>
                     </div>
+                    <form method="POST" action="update_profile.php">
+                        <div class="form-group">
+                            <label for="location">Location:</label>
+                            <input type="text" name="location" value="<?php echo htmlspecialchars($user['location']); ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="insurance_hospitals" style="display: block;">Insurance Hospitals:</label>
+                            <div class="checkbox-container">
+                                <?php
+                                $hospitalQuery = "SELECT hospital_id, name FROM hospitals";
+                                $hospitalResult = $conn->query($hospitalQuery);
+
+                                while ($hospital = $hospitalResult->fetch_assoc()) {
+                                    $checked = in_array($hospital['hospital_id'], $insurance_hospitals) ? 'checked' : '';
+                                    echo "<label class='checkbox-item'><input type='checkbox' name='insurance_hospitals[]' value='{$hospital['hospital_id']}' $checked> {$hospital['name']}</label>";
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="logoutBtn-btn">Update Profile</button>
+                    </form>
                 <?php } else { ?>
                     <p>Please <a href="login_form.php">log in</a> to view your details.</p>
                 <?php } ?>
