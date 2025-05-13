@@ -369,7 +369,6 @@ $conn->close();
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
                 <a href="features.html">Features</a>
-                <a href="#">Pricing Plans</a>
                 <a href="contactus.html">Contact Us</a>
             </nav>
             <div class="auth-buttons" id="auth-buttons">
