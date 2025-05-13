@@ -154,6 +154,9 @@
         .insurance-btn:hover {
             background-color: #14967F;
         }
+        #insuranceBtn {
+            display: none;
+        }
         .container {
             max-width: 1200px;
             margin: 20px auto;
@@ -359,7 +362,7 @@
             </div>
     <div class="container">
         <h1>Doctor Details</h1>
-        <button onclick="redirectToInsurance('${doctor.doctor_id}', '${doctor.hospital_id}')"class = "insurance-btn">
+        <button id="insuranceBtn" onclick="redirectToInsurance('${doctor.doctor_id}', '${doctor.hospital_id}')"class = "insurance-btn">
             Check Insurance
         </button>
 
@@ -402,165 +405,133 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            fetch("auth_status.php")
+        const authButtons = document.getElementById("auth-buttons");
+        const loadingDiv = document.getElementById("loading");
+        const resultsDiv = document.getElementById("results");
+        const doctorId = new URLSearchParams(window.location.search).get("doctor_id");
+
+        if (!doctorId) {
+            resultsDiv.innerHTML = "<p>Invalid doctor ID.</p>";
+            return;
+        }
+
+        loadingDiv.style.display = "block";
+
+        fetch("auth_status.php")
             .then(response => response.json())
             .then(data => {
-                let authButtons = document.getElementById("auth-buttons");
-                if (data.logged_in) {       
-                    localStorage.setItem("user_id", data.user.id);                         
+                if (data.logged_in) {
+                    localStorage.setItem("user_id", data.user.id);
                     authButtons.innerHTML = `
                         <a href="dashboard.php" class="profile">Profile</a>
                         <a href="logout.php" class="logout">Logout</a>
                     `;
-                }
-            })
-            .catch(error => console.error("Error fetching auth status:", error));
-
-            const params = new URLSearchParams(window.location.search);
-            const doctorId = new URLSearchParams(window.location.search).get("doctor_id");
-
-            const loadingDiv = document.getElementById("loading");
-            const resultsDiv = document.getElementById("results");
-
-            
-            if (!doctorId) {
-                resultsDiv.innerHTML = "<p>Invalid doctor ID.</p>";
-                return;
-            }
-
-            loadingDiv.style.display = "block";
-
-
-            fetch("fetch_doctordetails.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ doctor_id: doctorId }),
-            })
-            .then(response => response.json())
-            .then((data) => {
-                loadingDiv.style.display = "none";  // Hide loading indicator after fetching
-
-                if (data.status === "error") {
-                    resultsDiv.innerHTML = `<p>${data.message}</p>`;
-                    return;
-                }
-                
-                const lastSymptoms = localStorage.getItem("lastSymptoms") || "";   // Store the last used symptoms for the back button
-
-                let html = ` 
-                    <div class="doctor-info">
-                        <img src="${data.doctor.profile_img}" alt="${data.doctor.doctor_name}" class="profile-pic">
-                        <div class="details">
-                            <strong>Doctor:</strong> ${data.doctor.doctor_name}<br>
-                            <strong>Specialization:</strong> ${data.doctor.speciality_name}<br>
-                            <strong>Rating:</strong> ${data.doctor.rating}<br>
-                        </div>
-                    </div>
-                    <h3>Available Timings:</h3>
-                    <div class="schedule">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background-color: #e6f3f8;">
-                                    <th style="text-align: left; padding: 8px;">Day</th>
-                                    <th style="text-align: left; padding: 8px;">Time</th>
-                                    <th style="text-align: left; padding: 8px;">Hospital</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-
-                data.schedule.forEach((slot) => {
-                    html += `
-                        <tr>
-                            <td style="padding: 8px; border-top: 1px solid #ddd;">${slot.day_of_week}</td>
-                            <td style="padding: 8px; border-top: 1px solid #ddd;">${slot.time}</td>
-                            <td style="padding: 8px; border-top: 1px solid #ddd;">${slot.hospital_name}</td>
-                        </tr>`;
-                });
-
-                html += `
-                            </tbody>
-                        </table>
-                    </div>`;
-
-                html += `<h3 style="padding: 4px 0px; margin-top: 15px">Reviews:</h3>`;
-                if (data.reviews && data.reviews.length > 0) {
-                    data.reviews.forEach((review) => {
-                        html += `
-                            <div class="review">
-                                <p><strong>${review.reviewer_name}</strong> (${review.rating}/5): ${review.review}</p>
-                            </div>
-                        `;
-                    });
+                    const insuranceBtn = document.getElementById("insuranceBtn");
+                    if (insuranceBtn) insuranceBtn.style.display = "inline-block";
                 } else {
-                    html += `<p>No reviews yet.</p>`;
-                }                    
-
-                if (localStorage.getItem("user_id")) {
-                    html += `                            
-                        <div class="review-form">
-                            <h3>Leave a Review:</h3>
-                            <div class="input-row">
-                                <label for="rating">Rating (1-5):</label>
-                                <input type="number" id="rating" min="1" max="5" class="review-input" required>
-                                <button onclick="submitReview('${doctorId}')" class="submit-btn">Submit Review</button>
-                            </div>
-                            <div class="textarea-wrapper">
-                                <label for="comment">Comment:</label>
-                                <textarea id="comment" rows="4" class="review-textarea" placeholder="Write your review here..." required></textarea>
-                            </div>
-                            <div id="review-message" style='padding: 10px;'></div>
-                        </div>
-                        
+                    localStorage.removeItem("user_id");
+                    authButtons.innerHTML = `
+                        <a href="login_form.php" class="login">Login</a>
+                        <a href="sign_up.html" class="signup">Sign Up</a>
                     `;
                 }
-                resultsDiv.innerHTML = html;
-            })
-            .catch((error) => {
-                loadingDiv.style.display = "none";
-                resultsDiv.innerHTML = "<p>There was an error loading doctor details.</p>";
-                console.error("Error:", error);
-            });
-        });
-        
-        function redirectToInsurance(doctorId, hospitalId) {
-            window.location.href = `insurance.php?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
-        }
-        function submitReview(doctorId) {
-            const userId = localStorage.getItem("user_id");
-            const rating = document.getElementById("rating").value;
-            const comment = document.getElementById("comment").value.trim();
-            const messageDiv = document.getElementById("review-message");
 
-            if (!rating || !comment) {
-                messageDiv.innerHTML = "<p style='color:red;'>Please fill in all fields.</p>";
-                return;
-            }
+                // Now fetch doctor details AFTER auth status is resolved
+                fetch("fetch_doctordetails.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ doctor_id: doctorId }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loadingDiv.style.display = "none";
 
-            if (isNaN(rating) || rating < 1 || rating > 5) {
-                messageDiv.innerHTML = "<p style='color:red;'>Please enter a rating between 1 and 5.</p>";
-                return;
-            }
+                    if (data.status === "error") {
+                        resultsDiv.innerHTML = `<p>${data.message}</p>`;
+                        return;
+                    }
 
-            fetch("submit_review.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ doctor_id: doctorId, user_id: userId, rating, comment })
+                    const lastSymptoms = localStorage.getItem("lastSymptoms") || "";
+                    let html = `
+                        <div class="doctor-info">
+                            <img src="${data.doctor.profile_img}" alt="${data.doctor.doctor_name}" class="profile-pic">
+                            <div class="details">
+                                <strong>Doctor:</strong> ${data.doctor.doctor_name}<br>
+                                <strong>Specialization:</strong> ${data.doctor.speciality_name}<br>
+                                <strong>Rating:</strong> ${data.doctor.rating}<br>
+                            </div>
+                        </div>
+                        <h3>Available Timings:</h3>
+                        <div class="schedule">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background-color: #e6f3f8;">
+                                        <th style="text-align: left; padding: 8px;">Day</th>
+                                        <th style="text-align: left; padding: 8px;">Time</th>
+                                        <th style="text-align: left; padding: 8px;">Hospital</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    data.schedule.forEach((slot) => {
+                        html += `
+                            <tr>
+                                <td style="padding: 8px; border-top: 1px solid #ddd;">${slot.day_of_week}</td>
+                                <td style="padding: 8px; border-top: 1px solid #ddd;">${slot.time}</td>
+                                <td style="padding: 8px; border-top: 1px solid #ddd;">${slot.hospital_name}</td>
+                            </tr>`;
+                    });
+
+                    html += `
+                                </tbody>
+                            </table>
+                        </div>`;
+
+                    html += `<h3 style="padding: 4px 0px; margin-top: 15px">Reviews:</h3>`;
+                    if (data.reviews && data.reviews.length > 0) {
+                        data.reviews.forEach((review) => {
+                            html += `
+                                <div class="review">
+                                    <p><strong>${review.reviewer_name}</strong> (${review.rating}/5): ${review.review}</p>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        html += `<p>No reviews yet.</p>`;
+                    }
+
+                    // Check after auth status is confirmed
+                    if (localStorage.getItem("user_id")) {
+                        html += `
+                            <div class="review-form">
+                                <h3>Leave a Review:</h3>
+                                <div class="input-row">
+                                    <label for="rating">Rating (1-5):</label>
+                                    <input type="number" id="rating" min="1" max="5" class="review-input" required>
+                                    <button onclick="submitReview('${doctorId}')" class="submit-btn">Submit Review</button>
+                                </div>
+                                <div class="textarea-wrapper">
+                                    <label for="comment">Comment:</label>
+                                    <textarea id="comment" rows="4" class="review-textarea" placeholder="Write your review here..." required></textarea>
+                                </div>
+                                <div id="review-message" style='padding: 10px;'></div>
+                            </div>`;
+                    }
+
+                    resultsDiv.innerHTML = html;
+                })
+                .catch(error => {
+                    loadingDiv.style.display = "none";
+                    resultsDiv.innerHTML = "<p>There was an error loading doctor details.</p>";
+                    console.error("Error:", error);
+                });
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    messageDiv.innerHTML = "<p style='color:green;'>Review submitted successfully!</p>";
-                    setTimeout(() => window.location.reload(), 1000);
-                } else {
-                    messageDiv.innerHTML = `<p style='color:red;'>${data.message || "Something went wrong."}</p>`;
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                messageDiv.innerHTML = "<p style='color:red;'>Error submitting review.</p>";
-            });
-        }
+            .catch(error => console.error("Error fetching auth status:", error));
+    });
+    function redirectToInsurance(doctorId, hospitalId) {
+        window.location.href = `insurance.php?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
+    }
     </script>
     </div>
 </body>
