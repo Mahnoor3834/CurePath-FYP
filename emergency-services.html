@@ -256,83 +256,77 @@
 <body>
     <div class="firstportion">
         <!-- Navbar -->
-            <div class="navbar">
-                <div class="logo">
-                    <img src="logo.png" alt="CurePath Logo">
-                </div>
-                <nav class="navclass">
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About</a>
-                    <a href="features.html">Features</a>
-                    <a href="#">Pricing Plans</a>
-                    <a href="contactus.html">Contact Us</a>
-                </nav>
-                <div class="auth-buttons">
-                    <a href="login_form.php" class="login">Login</a>
-                    <a href="sign_up.html" class="signup">Sign Up</a>
-                </div>
+        <div class="navbar">
+            <div class="logo">
+                <img src="logo.png" alt="CurePath Logo">
             </div>
+            <nav class="navclass">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="features.html">Features</a>
+                <a href="#">Pricing Plans</a>
+                <a href="contactus.html">Contact Us</a>
+            </nav>
+            <div class="auth-buttons">
+                <a href="login_form.php" class="login">Login</a>
+                <a href="sign_up.html" class="signup">Sign Up</a>
+            </div>
+        </div>
 
-            <div class="container">
-                <h1 class="hero-heading">Emergency Services - CurePath</h1>
-                <p>
-                    In case of a medical emergency, immediate access to reliable healthcare can make all the difference. 
-                    CurePath has compiled a list of major hospitals across Pakistan with their 24/7 emergency contact numbers to ensure you get timely assistance when it matters most.
-                </p>
-                    <div class="feature-item">
-                        <h3>Aga Khan University Hospital</h3>
-                        <ul>
-                            <li><strong>Main Campus (Stadium Road)</strong><br>
-                                Emergency: +92 21 3486 1090<br>
-                                Contact Center: +92 21 111 911 911
-                            </li>
-                            <li><strong>Clifton Medical Services</strong><br>
-                                Contact: +92 21 111 911 911
-                            </li>
-                            <li><strong>The Aga Khan Hospital for Women and Children, Kharadar</strong><br>
-                                Contact: +92 21 3616 7800
-                            </li>
-                        </ul>   
-                    </div>
-                    <div class="feature-item">
-                        <h3>Liaquat National Hospital</h3>
-                        <ul>
-                            <li><strong>Main Campus (Stadium Road)</strong><br>
-                                UAN: +92 21 111 456 456<br>
-                                OPD Appointments: +92 21 34413010 / 34413011 / 34413012
-                            </li>
-                            <li><strong>Outreach Medical Services</strong><br>
-                                Gulistan-e-Jauhar: +92 21 34611414<br>
-                                Gulshan-e-Iqbal: +92 21 34838605<br>
-                                Naseerabad: +92 21 36310077
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="feature-item">
-                        <h3>Dr. Ziauddin Hospital</h3>
-                        <ul>
-                            <li><strong>North Nazimabad Campus</strong><br>
-                                Contact: +92 21 36648237-9
-                            </li>
-                            <li><strong>Clifton Campus</strong><br>
-                                Contact: +92 21 35862937-9
-                            </li>
-                            <li><strong>Keamari Campus</strong><br>
-                                Contact: +92 21 32851881-5
-                            </li>
-                            <li><strong>Boat Basin Campus</strong><br>
-                                Contact: +92 21 35157573
-                            </li>
-                            <li><strong>UAN (All Campuses)</strong><br>
-                                +92 21 111 942 942
-                            </li>
-                        </ul>
-                    </div>    
-                <p>
-                    <strong>Note:</strong> The numbers listed are for hospital emergency departments and are based on official sources as of the latest update. 
-                </p>
-            </div>
-            
+        <div class="container">
+            <h1 class="hero-heading">Emergency Services - CurePath</h1>
+            <p>
+                In case of a medical emergency, immediate access to reliable healthcare can make all the difference.
+                CurePath has compiled a list of major hospitals across Pakistan with their 24/7 emergency contact numbers to ensure you get timely assistance when it matters most.
+            </p>
+
+            <?php
+                include 'db_connection.php';
+
+                // Get parent hospitals
+                $sql = "SELECT * FROM hospitals WHERE affiliated_hospital_id IS NULL";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($hospital = $result->fetch_assoc()) {
+                        echo '<div class="feature-item">';
+                        echo '<h3>' . htmlspecialchars($hospital["name"]) . '</h3>';
+
+                        // Get child/affiliated hospitals
+                        $hospital_id = $hospital["hospital_id"];
+                        $sub_sql = "SELECT * FROM hospitals WHERE affiliated_hospital_id = $hospital_id";
+                        $sub_result = $conn->query($sub_sql);
+
+                        echo '<ul>';
+                        // Parent hospital info
+                        echo '<li><strong>Main Campus';
+                        if (!empty($hospital["location"])) {
+                            echo ' (' . htmlspecialchars($hospital["location"]) . ')';
+                        }
+                        echo '</strong><br>';
+                        echo 'Contact: ' . htmlspecialchars($hospital["contact"]) . '</li>';
+
+                        // Affiliated/child hospitals
+                        if ($sub_result->num_rows > 0) {
+                            while ($sub = $sub_result->fetch_assoc()) {
+                                echo '<li><strong>' . htmlspecialchars($sub["name"]) . '</strong><br>';
+                                if (!empty($sub["location"])) {
+                                    echo htmlspecialchars($sub["location"]) . '<br>';
+                                }
+                                echo 'Contact: ' . htmlspecialchars($sub["contact"]) . '</li>';
+                            }
+                        }
+                        echo '</ul></div>';
+                    }
+                } else {
+                    echo "<p>No hospital emergency data found.</p>";
+                }
+
+                $conn->close();
+            ?>
+
+            <p><strong>Note:</strong> The numbers listed are for hospital emergency departments and are based on official sources as of the latest update.</p>
+        </div>
     </div>
         <!-- Footer Section -->
         <footer class="footer">
