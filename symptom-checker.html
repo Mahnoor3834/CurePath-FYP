@@ -268,8 +268,8 @@
         .footer-email:hover {
             text-decoration: underline;
         }
-
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="firstportion">
@@ -282,7 +282,6 @@
                     <a href="index.html">Home</a>
                     <a href="about.html">About</a>
                     <a href="features.html">Features</a>
-                    <a href="#">Pricing Plans</a>
                     <a href="contactus.html">Contact Us</a>
                 </nav>
                 <div class="auth-buttons" id="auth-buttons">
@@ -367,7 +366,12 @@
                     });
         
                     if (selectedSymptoms.length === 0) {
-                        alert("Please select at least one symptom.");
+                        Swal.fire({
+                        icon: 'info',
+                        title: 'No Symptom Selected',
+                        text: 'Please select at least one symptom.',
+                        confirmButtonText: 'Cancel'
+                        });
                         return;
                     }
                     localStorage.setItem("selectedSymptoms", JSON.stringify(selectedSymptoms));
@@ -434,7 +438,6 @@
                 <a href="index.html" class="footer-link">Home</a>
                 <a href="about.html" class="footer-link">About</a>
                 <a href="features.html" class="footer-link">Features</a>
-                <a href="#" class="footer-link">Pricing Plans</a>
                 <a href="contactus.html" class="footer-link">Contact Us</a>
             </nav>
 

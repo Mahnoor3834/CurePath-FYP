@@ -205,6 +205,23 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
         }
 
+        .insurance-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .insurance-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #fff;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
         .sign-button {
             justify-content: center;
         }
@@ -287,6 +304,7 @@
             text-decoration: underline;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="firstportion">
@@ -299,7 +317,6 @@
                     <a href="index.html">Home</a>
                     <a href="about.html">About</a>
                     <a href="features.html">Features</a>
-                    <a href="#">Pricing Plans</a>
                     <a href="contactus.html">Contact Us</a>
                 </nav>
                 <div class="auth-buttons" id="auth-buttons">
@@ -312,60 +329,65 @@
                     <span class="hero-heading">Create Your Account</span>
                 </p><br>
             <form action="register.php" method="POST" onsubmit="return validateForm()">
-            <div class="form-group">
-                <label for="fullname">Full Name</label>
-                <input type="text" id="fullname" name="fullname" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="gender">Gender</label>
-                <select id="gender" name="gender" required>
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" name="dob" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="location">Location</label>
-                <input type="text" id="location" name="location" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <!-- <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div> -->
+                
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" required>
+                </div>
 
-            <div class="form-group">
-                <label for="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm-password" name="confirm-password" required>
-            </div>
-            
-            <!-- <div class="form-group">
-                <input type="checkbox" id="terms" name="terms" required>
-                <label for="terms">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
-            </div> -->
-            <input type="hidden" name="csrf_token" value="YOUR_SECURE_CSRF_TOKEN">
-            <div class="sign-button">
-                <button type="submit" class="signup-btn">Sign Up</button>
-            </div>    
-        </form>
+                <div class="form-group">
+                    <label for="insurance-hospitals">Choose Compatible Insurance Hospitals</label>
+                    <div id="insurance-hospitals" class="insurance-checkboxes"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                </div>
+                
+                <!-- <div class="form-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
+                </div> -->
+                <input type="hidden" name="csrf_token" value="YOUR_SECURE_CSRF_TOKEN">
+                <div class="sign-button">
+                    <button type="submit" class="signup-btn">Sign Up</button>
+                </div>    
+            </form>
         <p class="terms">Already have an account? <a href="login_form.php">Log in here</a></p>
         </div>
 
@@ -385,7 +407,6 @@
                     <a href="index.html" class="footer-link">Home</a>
                     <a href="about.html" class="footer-link">About</a>
                     <a href="features.html" class="footer-link">Features</a>
-                    <a href="#" class="footer-link">Pricing Plans</a>
                     <a href="contactus.html" class="footer-link">Contact Us</a>
                 </nav>
     
@@ -394,38 +415,29 @@
                     <p>© 2024 CurePath. All Rights Reserved.</p>
                 </div>
             </div>
-<<<<<<< HEAD
-
-            <!-- Navigation Links -->
-            <nav class="footer-nav">
-                <a href="index.html" class="footer-link">Home</a>
-                <a href="about.html" class="footer-link">About</a>
-                <a href="features.html" class="footer-link">Features</a>
-                <a href="#" class="footer-link">Pricing Plans</a>
-                <a href="contactus.html" class="footer-link">Contact Us</a>
-            </nav>
-
-            <!-- Contact and Copyright -->
-            <div class="footer-contact">
-                <p>© 2024 CurePath. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-=======
         </footer>
->>>>>>> dbb3eedd65372ffbdb5365017c4aaae68b4d255b
     <script>
         function validateForm() {
             let password = document.getElementById("password").value;
             let confirmPassword = document.getElementById("confirm-password").value;
     
             if (password.length < 6) {
-                alert("Password must be at least 6 characters long.");
+                Swal.fire({
+                icon: 'warning',
+                title: 'Weak Password',
+                text: 'Password must be at least 6 characters long.',
+                confirmButtonText: 'Cancel'
+            });
                 return false;
             }
     
             if (password !== confirmPassword) {
-                alert("Passwords do not match.");
+                Swal.fire({
+                icon: 'error',
+                title: 'Mismatch',
+                text: 'Passwords do not match.',
+                confirmButtonText: 'Cancel'
+            });
                 return false;
             }
     
@@ -444,6 +456,32 @@
                     }
                 })
                 .catch(error => console.error("Error fetching auth status:", error));
+            fetch("fetch_hospitals.php")
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById("insurance-hospitals");
+
+                data.forEach(hospital => {
+                const checkboxId = `hospital_${hospital.hospital_id}`;
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "insurance-option";
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.name = "insurance_hospitals[]";
+                checkbox.value = hospital.hospital_id;
+                checkbox.id = checkboxId;
+
+                const label = document.createElement("label");
+                label.setAttribute("for", checkboxId);
+                label.textContent = hospital.name;
+
+                wrapper.appendChild(checkbox);
+                wrapper.appendChild(label);
+                container.appendChild(wrapper);
+                });
+            });
         });
     </script>
 </div>

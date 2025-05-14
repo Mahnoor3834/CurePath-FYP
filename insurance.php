@@ -1,3 +1,7 @@
+<?php
+    session_start();
+    $userId = $_SESSION['user_id'] ?? null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -375,6 +379,7 @@
         }
 
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="firstportion">
@@ -387,7 +392,6 @@
                     <a href="index.html">Home</a>
                     <a href="about.html">About</a>
                     <a href="features.html">Features</a>
-                    <a href="#">Pricing Plans</a>
                     <a href="contactus.html">Contact Us</a>
                 </nav>
                 <div class="auth-buttons" id="auth-buttons">
@@ -411,7 +415,11 @@
                 <div>
                     <button type="button" onclick="searchDoctors()">Search</button>
                 </div>
-            </form>
+                <div>
+                    <label for="doctorSearch">Search Doctor by Name:</label>
+                    <input type="text" id="doctorSearch" placeholder="Enter doctor name...">
+                </div>
+            </form>            
         </div>
 
         <!-- Cost Estimation Section 
@@ -447,7 +455,6 @@
                 <a href="index.html" class="footer-link">Home</a>
                 <a href="about.html" class="footer-link">About</a>
                 <a href="features.html" class="footer-link">Features</a>
-                <a href="#" class="footer-link">Pricing Plans</a>
                 <a href="contactus.html" class="footer-link">Contact Us</a>
             </nav>
 
@@ -459,24 +466,23 @@
     </footer>
 
      <script>
-            // Fetch Insurance Dropdown Options
+            const userId = <?php echo json_encode($userId); ?>;
             document.addEventListener("DOMContentLoaded", function () {
                 const params = new URLSearchParams(window.location.search);
                 const doctorId = params.get("doctor_id");
                 const hospitalId = params.get("hospital_id");
                 const selectedSpecialization = params.get("specialization"); // specialization will not be used anymore
 
-                // Fetch insurance providers (hospitals offering insurance)
                 fetch("fetch_insurance.php")
-                    .then(response => response.json())
-                    .then(data => {
-                        const insuranceDropdown = document.getElementById("insurance");
-                        insuranceDropdown.innerHTML = '<option value="">Select Hospital</option>';
-                        data.forEach(hospital => {
-                            insuranceDropdown.innerHTML += `<option value="${hospital.hospital_id}">${hospital.name}</option>`;
-                        });
-                    })
-                    .catch(error => console.error("Error fetching insurance providers:", error));
+                .then(response => response.json())
+                .then(data => {
+                    const insuranceDropdown = document.getElementById("insurance");
+                    insuranceDropdown.innerHTML = '<option value="">Select Hospital</option>';
+                    data.forEach(hospital => {
+                        insuranceDropdown.innerHTML += `<option value="${hospital.hospital_id}">${hospital.name}</option>`;
+                    });
+                })
+                .catch(error => console.error("Error fetching insurance providers:", error));
             });
 
             let allDoctors = [];
@@ -487,7 +493,11 @@
                 const insuranceId = document.getElementById("insurance").value;
 
                 if (!insuranceId) {
-                    alert("Please select a hospital.");
+                        Swal.fire({
+                        icon: 'warning',
+                        title: 'No Hospital Selected',
+                        text: 'Please select a hospital.'
+                        });
                     return;
                 }
 
@@ -499,15 +509,15 @@
                     .then(response => response.json())
                     .then(data => {
                         const recommendedSpecialityIds = JSON.parse(localStorage.getItem("recommendedSpecialityIds") || "[]");
-            allDoctors = recommendedSpecialityIds.length > 0
-                ? data.filter(doc => recommendedSpecialityIds.includes(doc.speciality_id))
-                : data;
-                        currentPage = 1;
-                        displayDoctorsPage(currentPage);
-                    })
-                    .catch(error => {
-                        console.error("Error fetching doctors:", error);
-                    });
+                    allDoctors = recommendedSpecialityIds.length > 0
+                        ? data.filter(doc => recommendedSpecialityIds.includes(doc.speciality_id))
+                        : data;
+                                currentPage = 1;
+                                displayDoctorsPage(currentPage);
+                            })
+                            .catch(error => {
+                                console.error("Error fetching doctors:", error);
+                            });
             }
 
             function displayDoctorsPage(page) {
@@ -552,6 +562,41 @@
                     };
                     paginationDiv.appendChild(btn);
                 }
+            }
+
+            document.getElementById("doctorSearch").addEventListener("input", function () {
+                const query = this.value.trim().toLowerCase();
+                const filteredDoctors = allDoctors.filter(doc =>
+                    doc.name.toLowerCase().includes(query)
+                );
+                displayFilteredDoctors(filteredDoctors);
+            });
+
+            function displayFilteredDoctors(filteredList) {
+                const resultsDiv = document.getElementById("doctorResults");
+                const paginationDiv = document.getElementById("pagination");
+
+                resultsDiv.innerHTML = "";
+                paginationDiv.innerHTML = "";
+
+                if (filteredList.length === 0) {
+                    resultsDiv.innerHTML = "<p>No matching doctors found.</p>";
+                    return;
+                }
+
+                filteredList.forEach(doctor => {
+                    const availabilityText = doctor.availability.length > 0
+                        ? doctor.availability.join(", ")
+                        : "Not available";
+
+                    resultsDiv.innerHTML += `
+                        <div class="doctor-card">
+                            <strong>Doctor:</strong> ${doctor.name}<br>
+                            <strong>Speciality:</strong> ${doctor.speciality}<br>
+                            <button class="detail-btn" onclick="viewDoctorDetails('${doctor.doctor_id}')">Check Details</button>
+                        </div>
+                    `;
+                });
             }
 
             function viewDoctorDetails(doctorId) {
