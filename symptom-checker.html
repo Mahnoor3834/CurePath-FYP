@@ -144,6 +144,19 @@
             cursor: pointer;
         }
 
+        .symptom-button2 {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            background-color: #095d7e;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
         button:hover {
             background-color: #14967F;
         }
@@ -309,6 +322,10 @@
                     <div class="symptoms-list" id="symptomsContainer">
                     </div>
                     <button class="symptom-button" type="button" onclick="submitSymptoms()">Submit</button>
+                    <button class="symptom-button2" type="button" onclick="redirectToCostEstimation()">
+                        Estimate Cost
+                    </button>
+
                 </form>
                 <div class="results" id="results"></div>
             </div>
@@ -378,6 +395,31 @@
         
                     const queryParams = new URLSearchParams({ symptoms: selectedSymptoms.join(',') });
                     window.location.href = `recommended-doctors.html?${queryParams.toString()}`;
+                }
+                function redirectToCostEstimation() {
+                    const selectedSymptoms = [];
+                    const checkboxes = document.querySelectorAll('input[name="symptoms"]:checked');
+
+                    checkboxes.forEach((checkbox) => {
+                        selectedSymptoms.push(checkbox.value);
+                    });
+
+                    if (selectedSymptoms.length === 0) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'No Symptom Selected',
+                            text: 'Please select at least one symptom before continuing.',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }
+
+                    // Store in localStorage for use on the next page
+                    localStorage.setItem("selectedSymptoms", JSON.stringify(selectedSymptoms));
+
+                    // Redirect to cost estimation with selected symptoms as query params
+                    const queryParams = new URLSearchParams({ symptoms: selectedSymptoms.join(',') });
+                    window.location.href = `cost-estimation.php?${queryParams.toString()}`;
                 }
 
             document.addEventListener("DOMContentLoaded", function () {

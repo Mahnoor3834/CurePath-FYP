@@ -532,6 +532,44 @@
     function redirectToInsurance(doctorId, hospitalId) {
         window.location.href = `insurance.php?doctor_id=${doctorId}&hospital_id=${hospitalId}`;
     }
+    function submitReview(doctorId) {
+    const ratingInput = document.getElementById("rating");
+    const commentInput = document.getElementById("comment");
+    const messageDiv = document.getElementById("review-message");
+
+    const rating = ratingInput.value;
+    const comment = commentInput.value;
+    const userId = localStorage.getItem("user_id");
+
+    if (!rating || rating < 1 || rating > 5 || !comment) {
+        messageDiv.innerHTML = "<span style='color:red;'>Please enter a valid rating and comment.</span>";
+        return;
+    }
+
+    fetch("submit_review.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            doctor_id: doctorId,
+            user_id: userId,
+            rating: rating,
+            comment: comment
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            messageDiv.innerHTML = "<span style='color:green;'>Review submitted successfully!</span>";
+            // Optionally refresh reviews
+        } else {
+            messageDiv.innerHTML = "<span style='color:red;'>Failed to submit review.</span>";
+        }
+    })
+    .catch(err => {
+        messageDiv.innerHTML = "<span style='color:red;'>Error submitting review.</span>";
+        console.error("Review submission error:", err);
+    });
+}
     </script>
     </div>
 </body>

@@ -70,9 +70,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $stmt->close();
 
-    $query = "INSERT INTO users (fullname, email, gender, dob, location, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO users (fullname, email, gender, dob, location, password) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("sssssss", $fullname, $email, $gender, $dob, $location, $hashed_password);
+    $stmt->bind_param("ssssss", $fullname, $email, $gender, $dob, $location, $hashed_password);
 
     if ($stmt->execute()) {
         $user_id = $stmt->insert_id; // get new user's ID

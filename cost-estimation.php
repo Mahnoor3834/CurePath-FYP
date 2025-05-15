@@ -1,3 +1,7 @@
+<?php
+$symptomParam = isset($_GET['symptoms']) ? $_GET['symptoms'] : '';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -290,128 +294,99 @@
                 </div>
             </div>
 
-            <div class="container">
-                <h1 class="hero-heading">Cost Estimation</h1>
-                <p>Select the disease you've:</p>
-                <div class="search-row">
-                    <input 
-                        type="text" 
-                        id="diseaseSearch" 
-                        placeholder="Search for diseases..." 
-                        oninput="filterDiseases()" 
-                        class="search-input-box">
-                        
-                    <button type="button" onclick="clearDiseases()" class="search-clear-btn">
-                        Clear List
-                    </button>
-                </div>                
-                <form id="symptomForm">
-                    <div class="diseases-list" id="diseasesContainer">
-                    </div>
-                    <button class="disease-button" type="button" onclick="submitDiseases()">Get Estimate</button>
-                </form>
-                <div class="results" id="results"></div>
-            </div>
-            
-            <script>
-                // Function to get URL query parameters
-                function getQueryParams() {
-                    const params = new URLSearchParams(window.location.search);
-                    const symptoms = params.get("diseases");
-                    return symptoms ? symptoms.split(',') : [];
-                }
-        
-                function filterDiseases() {
-                    const searchValue = document.getElementById('diseaseSearch').value.toLowerCase();
-                    const symptoms = document.querySelectorAll('.disease-item');
+            <div class="container"> 
+    <h1 class="hero-heading">Cost Estimation</h1>
+    <p>Select the disease you have:</p>
 
-                    symptoms.forEach(item => {
-                        const label = item.querySelector('label').innerText.toLowerCase();
-                        const checkbox = item.querySelector('input');
+    <div class="search-row">
+        <input 
+            type="text" 
+            id="diseaseSearch" 
+            placeholder="Search for diseases..." 
+            oninput="filterDiseases()" 
+            class="search-input-box">
 
-                        if (label.includes(searchValue)) {
-                            item.style.display = 'flex';
+        <button type="button" onclick="clearDiseases()" class="search-clear-btn">
+            Clear List
+        </button>
+    </div>                
 
-                            // If this symptom is stored but not yet checked, check it
-                            const selected = JSON.parse(localStorage.getItem("selectedDiseases") || "[]");
-                            if (selected.includes(checkbox.value) && !checkbox.checked) {
-                                checkbox.checked = true;
-                            }
-                        } else {
-                            item.style.display = 'none';
-                        }                    
-                    });
-                }
+    <form id="symptomForm">
+       <div class="diseases-list" id="diseasesContainer"></div>
+        <button class="disease-button" type="button" onclick="submitDiseases()">Get Estimate</button>
+    </form>
 
-                function clearDiseases() {
-                    const checkboxes = document.querySelectorAll('input[name="diseases"]');
-                    checkboxes.forEach((checkbox) => {
-                        checkbox.checked = false;
-                    });
+    <div class="results" id="results"></div>
+</div>
 
-                    localStorage.removeItem("selectedDiseases");
-                    const symptoms = document.querySelectorAll('.disease-item');
-                    symptoms.forEach(item => {
-                        item.style.display = 'flex';
-                    });
-                }
+<script>
+    const symptomsFromQuery = "<?php echo $symptomParam; ?>".split(',');
 
+    function filterDiseases() {
+        const searchValue = document.getElementById('diseaseSearch').value.toLowerCase();
+        const symptoms = document.querySelectorAll('.disease-item');
+        symptoms.forEach(item => {
+            const label = item.querySelector('label').innerText.toLowerCase();
+            item.style.display = label.includes(searchValue) ? 'flex' : 'none';
+        });
+    }
 
-                function submitDiseases() {
-                    const selectedDiseases = [];
-                    const checkboxes = document.querySelectorAll('input[name="diseases"]:checked');
-        
-                    checkboxes.forEach((checkbox) => {
-                        selectedDiseases.push(checkbox.value);
-                    });
-        
-                    if (selectedDiseases.length === 2) {
-                        Swal.fire({
-                        icon: 'info',
-                        title: 'Many Diseases Selected',
-                        text: 'Please select only one disease.',
-                        confirmButtonText: 'Cancel'
-                        });
-                        return;
-                    }
-                    localStorage.setItem("selectedDiseases", JSON.stringify(selectedDiseases));
-        
-                    const queryParams = new URLSearchParams({ diseases: selectedDiseases.join(',') });
-                    window.location.href = `cost-details.html?${queryParams.toString()}`;
-                }
+    function clearDiseases() {
+        const checkboxes = document.querySelectorAll('input[name="diseases"]');
+        checkboxes.forEach(cb => cb.checked = false);
+        localStorage.removeItem("selectedDiseases");
+        document.querySelectorAll('.disease-item').forEach(item => item.style.display = 'flex');
+    }
 
-            document.addEventListener("DOMContentLoaded", function () {
-                const preselectedDiseases = getQueryParams();
-                const storedDiseases = JSON.parse(localStorage.getItem("selectedDiseases") || "[]");
-                const allDiseases = [...new Set([...preselectedDiseases, ...storedDiseases])];
+    function submitDiseases() {
+        const selectedDiseases = Array.from(document.querySelectorAll('input[name="diseases"]:checked'))
+                                      .map(cb => cb.value);
 
-                // Fetch symptoms dynamically and preselect previously selected ones
-                fetch("fetch_diseases.php")
-                    .then(response => response.text())
-                    .then(data => {
-                        const container = document.getElementById("diseasesContainer");
-                        container.innerHTML = data;
+        if (selectedDiseases.length === 0) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Invalid Selection',
+                text: 'Please select at least one disease.',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
 
-                        localStorage.setItem("selectedDiseases", JSON.stringify(allDiseases));
+        localStorage.setItem("selectedDiseases", JSON.stringify(selectedDiseases));
+        const queryParams = new URLSearchParams({ diseases: selectedDiseases.join(',') });
+        window.location.href = `cost-details.html?${queryParams.toString()}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("fetch_diseases.php")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("diseasesContainer").innerHTML = data;
+
+                if (symptomsFromQuery.length > 0 && symptomsFromQuery[0] !== "") {
+                    fetch("get_diseases_by_symptoms.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ symptoms: symptomsFromQuery })
                     })
-                    .catch(error => console.error("Error loading diseases:", error));
-        
-            
-                fetch("auth_status.php")
                     .then(response => response.json())
-                    .then(data => {
-                        let authButtons = document.getElementById("auth-buttons");
-                        if (data.logged_in) {                                
-                            authButtons.innerHTML = `
-                                <a href="dashboard.php" class="profile">Profile</a>
-                                <a href="logout.php" class="logout">Logout</a>
-                            `;
-                        }
-                    })
-                    .catch(error => console.error("Error fetching auth status:", error));
-                });
+                    .then(diseases => {
+                        diseases.forEach(disease => {
+                            const checkbox = document.querySelector(`input[value="${disease}"]`);
+                            if (checkbox) {
+                                checkbox.checked = true;
+                                checkbox.closest('.disease-item').style.display = 'flex';
+                            }
+                        });
 
-            </script>
+                        localStorage.setItem("selectedDiseases", JSON.stringify(diseases));
+                    })
+                    .catch(err => console.error("Error fetching diseases:", err));
+                }
+            });
+    });
+</script>
+
     <!-- Footer Section -->
     <footer class="footer">
         <div class="footer-container">

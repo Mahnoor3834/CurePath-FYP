@@ -281,50 +281,42 @@
 
             <?php
                 include 'db_connection.php';
+                
+                $mysqli = new mysqli($host, $username, $password, $dbname);
+                // Query hospitals grouped by parent hospital
+                $query = "SELECT h1.hospital_id, h1.name, h1.contact, h2.name AS parent_name
+                        FROM hospitals h1
+                        LEFT JOIN hospitals h2 ON h1.affiliated_hospital_id = h2.hospital_id
+                        ORDER BY h2.name, h1.name";
 
-                // Get parent hospitals
-                $sql = "SELECT * FROM hospitals WHERE affiliated_hospital_id IS NULL";
-                $result = $conn->query($sql);
+                $result = $mysqli->query($query);
 
-                if ($result->num_rows > 0) {
-                    while ($hospital = $result->fetch_assoc()) {
-                        echo '<div class="feature-item">';
-                        echo '<h3>' . htmlspecialchars($hospital["name"]) . '</h3>';
+                $groupedHospitals = [];
 
-                        // Get child/affiliated hospitals
-                        $hospital_id = $hospital["hospital_id"];
-                        $sub_sql = "SELECT * FROM hospitals WHERE affiliated_hospital_id = $hospital_id";
-                        $sub_result = $conn->query($sub_sql);
-
-                        echo '<ul>';
-                        // Parent hospital info
-                        echo '<li><strong>Main Campus';
-                        if (!empty($hospital["location"])) {
-                            echo ' (' . htmlspecialchars($hospital["location"]) . ')';
-                        }
-                        echo '</strong><br>';
-                        echo 'Contact: ' . htmlspecialchars($hospital["contact"]) . '</li>';
-
-                        // Affiliated/child hospitals
-                        if ($sub_result->num_rows > 0) {
-                            while ($sub = $sub_result->fetch_assoc()) {
-                                echo '<li><strong>' . htmlspecialchars($sub["name"]) . '</strong><br>';
-                                if (!empty($sub["location"])) {
-                                    echo htmlspecialchars($sub["location"]) . '<br>';
-                                }
-                                echo 'Contact: ' . htmlspecialchars($sub["contact"]) . '</li>';
-                            }
-                        }
-                        echo '</ul></div>';
-                    }
-                } else {
-                    echo "<p>No hospital emergency data found.</p>";
+                while ($row = $result->fetch_assoc()) {
+                    $parentName = $row['parent_name'] ?? $row['name'];
+                    $groupedHospitals[$parentName][] = [
+                        'name' => $row['name'],
+                        'contact' => $row['contact']
+                    ];
                 }
+                ?>
 
-                $conn->close();
-            ?>
+                <?php foreach ($groupedHospitals as $group => $hospitals): ?>
+                    <div class="feature-item">
+                        <h3><?= htmlspecialchars($group) ?></h3>
+                        <ul>
+                            <?php foreach ($hospitals as $hospital): ?>
+                                <li><strong><?= htmlspecialchars($hospital['name']) ?></strong><br>
+                                    Contact: <?= htmlspecialchars($hospital['contact']) ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endforeach; ?>
 
-            <p><strong>Note:</strong> The numbers listed are for hospital emergency departments and are based on official sources as of the latest update.</p>
+                <p><strong>Note:</strong> The numbers listed are for hospital emergency departments and are based on official sources as of the latest update.</p>
+
         </div>
     </div>
         <!-- Footer Section -->
