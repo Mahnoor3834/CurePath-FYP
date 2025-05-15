@@ -5,7 +5,6 @@ include 'db_connection.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = trim($_POST['fullname']);
     $email = trim($_POST['email']);
-    // $phone = trim($_POST['phone']);
     $gender = trim($_POST['gender']);
     $dob = trim($_POST['dob']);
     $location = trim($_POST['location']);
@@ -75,9 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssssss", $fullname, $email, $gender, $dob, $location, $hashed_password);
 
     if ($stmt->execute()) {
-        $user_id = $stmt->insert_id; // get new user's ID
-
-        // Insert selected insurance hospitals
+        $user_id = $stmt->insert_id; 
         if (!empty($insurance_hospitals)) {
             $insurance_query = "INSERT INTO user_insurance_hospitals (user_id, hospital_id) VALUES (?, ?)";
             $insurance_stmt = $conn->prepare($insurance_query);
