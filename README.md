@@ -21,7 +21,7 @@ CurePath is a web-based application designed to assist patients in identifying t
 
 ## Developers  
 - **Mahnoor Sohail**  
-- **Hadis Syed**  
+- **Hadia Syed**  
 - **Tahura Nafees**  
 Final Year Students, Bachelor of Software Engineering  
 National University of Computer and Emerging Sciences (FAST-NUCES)
